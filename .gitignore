@@ -1,0 +1,10 @@
+# Virtual Environment stuff
+Lib
+Include
+Scripts
+*.cfg
+
+#Python stuff
+__pycache__
+
+# Angular stuff goes here
