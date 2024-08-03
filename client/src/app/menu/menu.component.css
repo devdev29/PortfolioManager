@@ -1,0 +1,77 @@
+.menu-container {
+    background-color: rgba(255, 255, 255, 0.2);
+    z-index: 2;
+    padding: 1.5rem;
+    height: 100%;
+    box-shadow: 1px 0px 5px 1px rgb(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.menu-top {
+    border-bottom: 0.05px solid rgba(255, 255, 255, 0.3);
+    padding: 1rem 0rem;
+    display: flex;
+    justify-content: center;
+}
+
+.menu-top img {
+    height: 2rem;
+    border-radius: 20%;
+    display: inline-block;
+    padding: 0.5rem;
+    background-color: rgb(255, 149, 0);
+}
+
+.menu-top div {
+    display: inline-block;
+    margin-left: 1.5rem;
+    vertical-align: top;
+    padding: 0.6rem 0rem;
+}
+
+.menu-top div span {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.5rem;
+    letter-spacing: 0.1rem;
+}
+
+.menu-btm {
+    padding: 4rem 0rem;
+    padding-left: 1rem;
+}
+
+.menu-btm button {
+    font-size: 1.1rem;
+    padding: 0.75rem;
+    margin: 1rem 0rem;
+    border-radius: 2rem;
+    width: 100%;
+    background-color: rgb(0, 0, 0);
+    animation: none;
+    border: none;
+    text-align: left;
+    border-radius: 2rem;
+    transition: 0.75s ease;
+}
+
+.menu-btm button fa-icon {
+    margin: 0rem 0.5rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 50%;
+    color: rgb(255, 149, 0);
+}
+
+.menu-btm button span {
+    margin: 0rem 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.menu-btm button.active {
+    background-color: rgb(255, 149, 0);
+    width: 30rem;
+}
+
+button.menu_btn.transparent.active fa-icon,
+button.menu_btn.transparent.active span {
+    color: black;
+}
