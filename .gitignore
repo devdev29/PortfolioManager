@@ -7,4 +7,7 @@ Scripts
 #Python stuff
 __pycache__
 
+# Environment variables
+.env
+
 # Angular stuff goes here
