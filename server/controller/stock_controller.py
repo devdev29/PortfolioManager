@@ -4,7 +4,7 @@ import requests
 from flask import Flask, jsonify, request
 
 from model.stock_model import Stock
-from repository.stocks_repo import StockRepo
+from repository.stock_repo import StockRepo
 
 app = Flask(__name__)
 

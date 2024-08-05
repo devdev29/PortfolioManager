@@ -12,7 +12,7 @@ create table stocks(
     foreign key (account_no) references cash(account_no)
 )
 
-create table cash(
+create table accounts(
     account_no varchar(255) primary,
     bank_name varchar(255),
     account_type varchar(255),
@@ -27,13 +27,9 @@ create table mutual_funds(
     date_invested date
 )
 
-create table value(
+create table values(
     day date primary,
-    value float
-)
-
-create table flows(
-    day date primary,
-    cash_inflow float,
-    cash_outflow float
+    value float,
+    inflow float,
+    outflow float
 )

@@ -17,14 +17,16 @@ class Account:
    
     @account_no.setter
     def set_account_no(self, account_no: str):
-        if not len(account_no) != 15:
-            return -1
         self.__account_no = account_no
-        return 1
     
     @account_type.setter
     def set_account_type(self, account_type: int):
-        if account_type > 2 and account_type < 0:
-            return -1
         self.__account_type = account_type
-        return 1
+    
+    def to_list(self):
+        return [
+            self.__account_no,
+            self.bank_name,
+            self.__account_type,
+            self.amount
+        ]
