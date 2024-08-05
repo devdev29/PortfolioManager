@@ -1,23 +1,30 @@
-<section class="menu-container">
-    <div class="menu-top">
-        <img src="../../assets/images/logo.png">
-        <div>
-            <span>CROISSANT</span>
-        </div> 
+<section>
+    <div class="menu-container">
+        <div class="menu-top">
+            <img src="../../assets/images/logo.png">
+            <div>
+                <span>CROISSANT</span>
+            </div> 
+        </div>
+        
+        <div class="menu-btm">
+            <button class="menu_btn transparent" [class.active]="activeButton == 1" (click)="openDashboard()">
+                <fa-icon [icon]="faChartLine"></fa-icon><span>Dashboard</span>
+            </button>
+            <button class="menu_btn transparent" [class.active]="activeButton == 2" (click)="openAsset()">
+                <fa-icon [icon]="faSackDollar"></fa-icon><span>Assets</span>
+            </button>
+            <button class="menu_btn transparent" [class.active]="activeButton == 3" (click)="openProfile()">
+                <fa-icon [icon]="faUser"></fa-icon><span>Update Profile</span>
+            </button>
+            <button class="menu_btn transparent" [class.active]="activeButton == 4" (click)="openLogin()">
+                <fa-icon [icon]="faRightFromBracket"></fa-icon><span>Log Out</span>
+            </button> 
+        </div>
     </div>
-    
-    <div class="menu-btm">
-        <button class="menu_btn transparent" [class.active]="activeButton == 1" (click)="openDashboard()">
-            <fa-icon [icon]="faChartLine"></fa-icon><span>Dashboard</span>
-        </button>
-        <button class="menu_btn transparent" [class.active]="activeButton == 2" (click)="openAsset()">
-            <fa-icon [icon]="faSackDollar"></fa-icon><span>Assets</span>
-        </button>
-        <button class="menu_btn transparent" [class.active]="activeButton == 3" (click)="openProfile()">
-            <fa-icon [icon]="faUser"></fa-icon><span>Update Profile</span>
-        </button>
-        <button class="menu_btn transparent" [class.active]="activeButton == 4" (click)="openLogin()">
-            <fa-icon [icon]="faRightFromBracket"></fa-icon><span>Log Out</span>
-        </button> 
-    </div>
+    <app-asset class="menu-right" *ngIf="activeButton == 2"></app-asset>
+    <!-- <div class="menu-right">
+        <app-dashboard *ngIf="activeButton == 1"></app-dashboard>
+        <app-asset *ngIf="activeButton == 2"></app-asset>
+    </div> -->
 </section>

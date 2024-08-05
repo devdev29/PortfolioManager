@@ -1,0 +1,44 @@
+.header-container {
+    margin: 0;
+    padding: 1.5rem 2rem;
+    border-bottom: 0.1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 0px;
+}
+
+.header-greeting {
+    display: inline-block;
+    width: 50%;
+}
+
+.header-greeting h2 {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.7rem;
+    margin-bottom: 0.5rem;
+}
+
+.header-greeting p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.8rem;
+    letter-spacing: 1.25px;
+}
+
+.header-profile {
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+    vertical-align: top;
+    padding-top: 1rem;
+}
+
+.header-profile fa-icon {
+    margin: 0rem 0.5rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 50%;
+    background-color: rgb(255, 149, 0);
+    margin-right: 5rem;
+}
+
+.header-profile span {
+    margin: 0rem 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+}

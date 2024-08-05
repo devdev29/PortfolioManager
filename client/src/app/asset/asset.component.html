@@ -1,11 +1,28 @@
 <section>
-    <div class="asset-chart">
-        
-    </div>
-    <div class="asset-cash">
-
-    </div>
-    <div class="asset-investment">
-        
+    <div class="asset-container">
+        <app-header></app-header>
+        <div class="asset-chart">
+            <div class="income-chart">
+                <canvas id="incomeChart" >{{ incomeChart }}</canvas>
+            </div>
+            <div class="spending-chart">
+                <canvas id="spendingChart" >{{ spendingChart }}</canvas>
+            </div>
+        </div>
+        <div class="asset-grp asset-cash">
+            <h1><fa-icon style="margin-right: 1rem;" [icon]="faWallet"></fa-icon>CASH</h1>
+            <div class="asset-cash-list" *ngFor="let comp of cashComponents">
+                <p>{{comp.bankName}}</p>
+                <p>{{comp.accountType}}</p>
+                <p>{{comp.balance}}</p>
+            </div>
+        </div>
+        <div class="asset-grp asset-investment">
+            <h1><fa-icon style="margin-right: 1rem;" [icon]="faMoneyBillTrendUp"></fa-icon>INVESTMENTS</h1>
+            <div class="asset-stocks-list" *ngFor="let comp of stockComponents">
+                <p>{{comp.stockName}}</p>
+                <p>{{comp.quantity * comp.marketCap}}</p>
+            </div>
+        </div>
     </div>
 </section>

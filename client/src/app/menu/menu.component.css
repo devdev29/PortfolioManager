@@ -1,14 +1,21 @@
+section {
+    height: 100vh;
+    display: flex;
+    width: 100%;
+}
+
 .menu-container {
-    background-color: rgba(255, 255, 255, 0.2);
-    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.07);
+    z-index: 1000;
     padding: 1.5rem;
+    width: 20rem;
     height: 100%;
-    box-shadow: 1px 0px 5px 1px rgb(255, 255, 255, 0.1);
+    position: fixed;
+    box-shadow: 1px 0px 5px 4px rgba(0, 0, 0);
     overflow: hidden;
 }
 
 .menu-top {
-    border-bottom: 0.05px solid rgba(255, 255, 255, 0.3);
     padding: 1rem 0rem;
     display: flex;
     justify-content: center;
@@ -26,7 +33,7 @@
     display: inline-block;
     margin-left: 1.5rem;
     vertical-align: top;
-    padding: 0.6rem 0rem;
+    padding: 0.9rem 0rem;
 }
 
 .menu-top div span {
@@ -36,8 +43,7 @@
 }
 
 .menu-btm {
-    padding: 4rem 0rem;
-    padding-left: 1rem;
+    padding: 4rem 1rem;
 }
 
 .menu-btm button {
@@ -74,4 +80,11 @@
 button.menu_btn.transparent.active fa-icon,
 button.menu_btn.transparent.active span {
     color: black;
+}
+
+.menu-right {
+    flex-grow: 1; 
+    padding: 1rem 0rem;
+    padding-left: 24rem; 
+    overflow-y: scroll;
 }
