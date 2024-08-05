@@ -3,11 +3,13 @@ create database Portfolios;
 use Portfolios;
 
 create table stocks(
-    ticker varchar(5) primary,
+    ticker varchar(10) primary, -- allow for bse tickers upto 10 characters
+    exchange: varchar(255),
     market_cap int,
     full_name varchar(255),
     quantity bigint,
-    bought_price float
+    amount_invested float,
+    foreign key (account_no) references cash(account_no)
 )
 
 create table cash(
@@ -28,4 +30,10 @@ create table mutual_funds(
 create table value(
     day date primary,
     value float
+)
+
+create table flows(
+    day date primary,
+    cash_inflow float,
+    cash_outflow float
 )
