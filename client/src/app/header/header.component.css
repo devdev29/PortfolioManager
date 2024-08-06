@@ -1,7 +1,7 @@
 .header-container {
     margin: 0;
     padding: 1.5rem 2rem;
-    border-bottom: 0.1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 0.1px solid #d4d7d7;
     padding-bottom: 0px;
 }
 
@@ -11,13 +11,13 @@
 }
 
 .header-greeting h2 {
-    color: rgba(255, 255, 255, 0.9);
+    color: #d4d7d7;
     font-size: 1.7rem;
     margin-bottom: 0.5rem;
 }
 
 .header-greeting p {
-    color: rgba(255, 255, 255, 0.9);
+    color: #d4d7d7;
     font-size: 0.8rem;
     letter-spacing: 1.25px;
 }
@@ -34,11 +34,11 @@
     margin: 0rem 0.5rem;
     padding: 0.5rem 0.6rem;
     border-radius: 50%;
-    background-color: rgb(255, 149, 0);
+    background-color: #ecb176;
     margin-right: 5rem;
 }
 
 .header-profile span {
     margin: 0rem 0.5rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: #d4d7d7;
 }
