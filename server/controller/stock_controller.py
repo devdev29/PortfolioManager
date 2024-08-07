@@ -1,81 +1,108 @@
 import os
 import requests
+import logging
 from datetime import date
 
-from flask import Flask, jsonify, request
+from flask import Blueprint, jsonify, request
 
 from model.stock_model import Stock
+from exceptions import InsufficientFundsError
 from repository.stock_repo import StockRepo
 from repository.account_repo import AccountRepo
 from repository.value_repo import ValueRepo
 
-app = Flask(__name__)
+stocks = Blueprint('stocks', __name__)
 
 STOCK_EXCHANGE = 'BSE'
 
 #Helpers
 def update_flows(amount: float, account_no: str):
-    account = AccountRepo.get_account_by_no(account_no)[0]
-    account['amount'] += amount
-    account_updated = AccountRepo.update_account(account)
+    AccountRepo.update_amount(account_no, amount)
     #Update total cash flows
     value_row = ValueRepo.get_value(date.today())[0]
     inflow = value_row['inflow']
     outflow = value_row['outflow']
     inflow += amount
     outflow += amount
-    value_updated = ValueRepo.update_inflow(inflow) and ValueRepo.update_outflow(outflow)
+    ValueRepo.update_inflow(inflow) 
+    ValueRepo.update_outflow(outflow)
 
-@app.route('/stocks/search/<ticker_search>', methods=['GET'])
+@stocks.route('/search/<ticker_search>', methods=['GET'])
 def get_valid_stocks(ticker_search: str):
     ticker_search = ticker_search.upper()
     res = requests.get(
         f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&exchange={STOCK_EXCHANGE}&apikey={os.environ["FMP_API_KEY"]}'
-        )
-    return res
+        ).json()
+    return jsonify(res)
 
-@app.route('/stocks/portfolio/<ticker_search>', methods=['GET'])
+@stocks.route('/portfolio/<ticker_search>', methods=['GET'])
 def get_portfolio_stocks(ticker_search: str):
-    ticker_search = ticker_search.upper()
-    stocks = StockRepo.search_portfolio_stock_by_ticker(ticker_search)
+    ticker_search = ticker_search.strip().upper()
+    stocks = StockRepo.search_stock_by_ticker(ticker_search)
     return jsonify(stocks), 200
 
-@app.route('/stocks/portfolio/<account_no>', methods=['POST'])
-def add_stock(account_no: str):
+@stocks.route('/portfolio/all', methods=['GET'])
+def get_all_stocks():
+    stocks = StockRepo.get_all_stocks()
+    return jsonify(stocks), 200
+
+@stocks.route('/portfolio', methods=['POST'])
+def add_stock():
     # TODO: add logic to calculate and adjust cash flow from given account
-    data = request.json
-    ticker = data['ticker']
-    price_res = requests.get(
-        f'https://api.twelvedata.com/price?symbol={ticker}&exchange={STOCK_EXCHANGE}&apikey={os.environ["TWELVE_API_KEY"]}'
-    ).json()
-    amount = price_res['price']*data['quantity']
-    #Update account state due to stock addition
-    data['amount_invested'] = amount
-    new_stock = Stock(**data)
-    added = StockRepo.add_new_stock(new_stock)
-    if added == 1 and account_updated == 1 and value_updated:
+    try:
+        data = request.json
+        ticker = data['ticker']
+        price_res = requests.get(
+            f'https://api.twelvedata.com/price?symbol={ticker}&exchange={STOCK_EXCHANGE}&apikey={os.environ["TWELVE_API_KEY"]}'
+        ).json()
+        amount = float(price_res['price'])*float(data['quantity'])
+        #Update account state and flows due to stock addition
+        update_flows(amount=amount, account_no=data['account_no'])
+        data['amount_invested'] = amount
+        new_stock = Stock(**data)
+        StockRepo.add_new_stock(new_stock)
         return jsonify(new_stock), 201
-    return {'message': 'could not insert stock'}, 409
+    except InsufficientFundsError as e:
+        return jsonify({'message': str(e)}), 400
+    except Exception as e:
+        logging.exception(e)
+        return {'message': 'could not insert stock'}, 409
 
 
-@app.route('/stocks/portfolio/<ticker>', methods=['DELETE'])
+@stocks.route('/portfolio/<ticker>', methods=['DELETE'])
 def delete_stock(ticker: str):
     # TODO: add logic to update liquid balance in account
-    res = StockRepo.remove_stock(ticker)
-    if res == 1:
+    try:
+        stock = StockRepo.get_stock_by_ticker(ticker)[0]
+        price_res = requests.get(
+            f'https://api.twelvedata.com/price?symbol={ticker}&exchange={STOCK_EXCHANGE}&apikey={os.environ["TWELVE_API_KEY"]}'
+        ).json()
+        amount = price_res['price']*stock['quantity']
+        update_flows(amount, stock.account_no)
+        StockRepo.remove_stock(ticker)
         return jsonify(ticker), 202
-    return {'message': 'could not remove stock'}, 409
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message': 'could not remove stock'}), 409
 
-@app.route('/stocks/portfolio', methods=['PUT'])
+@stocks.route('/portfolio', methods=['PUT'])
 def update_stock():
-    data = request.json
-    price_res = requests.get(
-        f'https://api.twelvedata.com/price?symbol={data['ticker']}&exchange={STOCK_EXCHANGE}&apikey={os.environ["TWELVE_API_KEY"]}'
-    ).json()
-    amount = price_res['price']*data['quantity']
-    data['amount_invested'] = amount
-    stock = Stock(**data)
-    res = StockRepo.update_stock(stock=stock)
-    if res == 1:
+    try:
+        data = request.json
+        price_res = requests.get(
+            f'https://api.twelvedata.com/price?symbol={data['ticker']}&exchange={STOCK_EXCHANGE}&apikey={os.environ["TWELVE_API_KEY"]}'
+        ).json()
+        amount = price_res['price']*data['quantity']
+        data['amount_invested'] = amount
+        update_flows(amount, data['account_no'])
+        stock = Stock(**data)
+        StockRepo.update_stock(stock=stock)
         return jsonify(stock), 204
-    return {'message': 'could not update stock'}, 409
+    except Exception as e:
+        logging.exception(e)
+        return {'message': 'could not update stock'}, 409
+
+@stocks.route('/performance', methods=['GET'])
+def get_stock_performance():
+    #TODO: find api that gives stock performance
+    ...
