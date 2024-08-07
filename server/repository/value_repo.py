@@ -19,7 +19,7 @@ class ValueRepo:
         try:
             with get_db_connection() as (conn, cursor):
                 today = value['day']
-                stmt = 'update value set values(%s, %s, %s) where day=%s'
+                stmt = 'update value set value(%s, %s, %s) where day=%s'
                 params = (*value.to_list(), today)
                 cursor.execute(stmt, params=params)
                 conn.commit()
