@@ -8,6 +8,7 @@ class Stock:
     full_name: str
     __quantity: int
     __amount_invested: float
+    account_no: str
     
     @property
     def quantity(self):
@@ -32,6 +33,7 @@ class Stock:
             self.market_cap,
             self.full_name,
             self.__quantity,
-            self.__amount_invested
+            self.__amount_invested,
+            self.account_no
         ]
     
