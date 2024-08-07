@@ -5,13 +5,13 @@ section {
 }
 
 .menu-container {
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: #a26f4559;
     z-index: 1000;
     padding: 1.5rem;
     width: 20rem;
     height: 100%;
     position: fixed;
-    box-shadow: 1px 0px 5px 4px rgba(0, 0, 0);
+    box-shadow: 1px 0px 5px 4px #1d140d;
     overflow: hidden;
 }
 
@@ -26,7 +26,7 @@ section {
     border-radius: 20%;
     display: inline-block;
     padding: 0.5rem;
-    background-color: rgb(255, 149, 0);
+    background-color: #ecb176;
 }
 
 .menu-top div {
@@ -37,7 +37,7 @@ section {
 }
 
 .menu-top div span {
-    color: rgba(255, 255, 255, 0.9);
+    color: #d4d7d7;
     font-size: 1.5rem;
     letter-spacing: 0.1rem;
 }
@@ -52,7 +52,7 @@ section {
     margin: 1rem 0rem;
     border-radius: 2rem;
     width: 100%;
-    background-color: rgb(0, 0, 0);
+    background-color: #1d140d;
     animation: none;
     border: none;
     text-align: left;
@@ -64,22 +64,22 @@ section {
     margin: 0rem 0.5rem;
     padding: 0.5rem 0.6rem;
     border-radius: 50%;
-    color: rgb(255, 149, 0);
+    color: #ecb176;
 }
 
 .menu-btm button span {
     margin: 0rem 0.5rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: #d4d7d7;
 }
 
 .menu-btm button.active {
-    background-color: rgb(255, 149, 0);
+    background-color: #ecb176;
     width: 30rem;
 }
 
 button.menu_btn.transparent.active fa-icon,
 button.menu_btn.transparent.active span {
-    color: black;
+    color: #1d140d;
 }
 
 .menu-right {
