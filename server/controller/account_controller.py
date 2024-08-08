@@ -40,6 +40,17 @@ def add_account():
         logging.exception(e)
         return jsonify({'message':'could not add account'}), 409
 
+@account.route('/', methods=['PUT'])
+def update_amount():
+    try:
+        data = request.json
+        new_amount = AccountRepo.update_amount(data['account_no'], data['diff'])
+        return jsonify({'updated_amount':new_amount}), 204
+    except AccountDoesNotExistError as e:
+        return jsonify({'message':str(e)}), 400
+    except Exception as e:
+        return jsonify({'message': 'could not update amount'})
+    
 @account.route('/liquidity',  methods=['GET'])
 def get_total_liquidity():
     try:
