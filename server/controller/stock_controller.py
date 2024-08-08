@@ -19,7 +19,7 @@ STOCK_EXCHANGE = 'nasdaq'
 def update_flows(amount: float, account_no: str):
     AccountRepo.update_amount(account_no, amount)
     #Update total cash flows
-    value_row = ValueRepo.get_value(date.today())[0]
+    value_row = ValueRepo.get_value(date.today())
     inflow = value_row['inflow']
     outflow = value_row['outflow']
     inflow += amount
@@ -95,9 +95,8 @@ def update_stock():
         amount = float(price_res['price'])*int(data['quantity'])
         data['amount_invested'] = amount
         update_flows(amount, data['account_no'])
-        stock = Stock(**data)
-        StockRepo.update_stock(stock=stock)
-        return jsonify(stock), 204
+        StockRepo.update_stock(data['quantity'])
+        return jsonify(data), 204
     except Exception as e:
         logging.exception(e)
         return {'message': 'could not update stock'}, 409
