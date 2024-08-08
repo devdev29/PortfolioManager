@@ -2,34 +2,46 @@ create database Portfolios;
 
 use Portfolios;
 
+-- TODO: add users and the relationships that come with it
+
+create table accounts(
+    account_no varchar(255) primary key,
+    bank_name varchar(255),
+    account_type enum('current', 'savings'),
+    amount float
+);
+
 create table stocks(
-    ticker varchar(10) primary, -- allow for bse tickers upto 10 characters
-    exchange: varchar(255),
-    market_cap int,
+    ticker varchar(10) primary key, -- allow for bse tickers upto 10 characters
+    exchange varchar(255),
+    market_cap enum('small', 'medium', 'high'),
     full_name varchar(255),
     quantity bigint,
     amount_invested float,
-    foreign key (account_no) references cash(account_no)
-)
-
-create table accounts(
-    account_no varchar(255) primary,
-    bank_name varchar(255),
-    account_type varchar(255),
-    amount float
-)
+    account_no varchar(255),
+    foreign key (account_no) references accounts(account_no)
+);
 
 create table mutual_funds(
-    name varchar(255),
+    name varchar(255) primary key,
     amount float,
     net_asset_value float,
     total_return float,
     date_invested date
-)
+);
 
-create table values(
-    day date primary,
+create table value(
+    day date primary key,
     value float,
     inflow float,
     outflow float
-)
+);
+
+insert into accounts values('aaa', 'HDFC Bank', 'savings', 200000);
+insert into accounts values('bbb', 'IDBI Bank', 'current', 100000);
+
+insert into stocks values('AAPL', 'NASDAQ', 'large', 'Apple Inc', 100, 20700, 'aaa');
+insert into stocks values('NVDA', 'NASDAQ', 'large', 'NVIDIA Corp', 100, 10425, 'bbb');
+insert into stocks values('MSFT', 'NASDAQ', 'large', 'Microsoft Corp', 100, 40000, 'bbb');
+insert into stocks values('UL', 'NASDAQ', 'large', 'Teradata Corp', 100, 2505, 'bbb');
+insert into stocks values('WMT', 'NYSE', 'large', 'Walmart Inc', 100, 6700, 'aaa');
