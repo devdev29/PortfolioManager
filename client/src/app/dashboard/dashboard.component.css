@@ -1,20 +1,5 @@
-section {
-    height: 100vh;
-    display: flex;
-    width: 100%;
-}
-
-app-menu {
-    width: 20rem;
-    height: 100%;
-    position: fixed;
-}
-
-.asset-right {
-    flex-grow: 1;
+.dashboard-container {
     padding: 1rem 0rem;
-    padding-left: 20rem;
-    overflow-y: scroll;
 }
 
 app-header {

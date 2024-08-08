@@ -14,14 +14,15 @@
             <button class="menu_btn transparent" [class.active]="activeButton == 2" (click)="openAsset()">
                 <fa-icon [icon]="faSackDollar"></fa-icon><span>Assets</span>
             </button>
-            <button class="menu_btn transparent" [class.active]="activeButton == 3" (click)="openProfile()">
-                <fa-icon [icon]="faUser"></fa-icon><span>Update Profile</span>
+            <button class="menu_btn transparent" [class.active]="activeButton == 3" (click)="openBuySell()">
+                <fa-icon [icon]="faUser"></fa-icon><span>Buy or Sell Assets</span>
             </button>
             <button class="menu_btn transparent" [class.active]="activeButton == 4" (click)="openLogin()">
                 <fa-icon [icon]="faRightFromBracket"></fa-icon><span>Log Out</span>
             </button> 
         </div>
     </div>
+    <app-dashboard class="menu-right" *ngIf="activeButton == 1"></app-dashboard>
     <app-asset class="menu-right" *ngIf="activeButton == 2"></app-asset>
     <!-- <div class="menu-right">
         <app-dashboard *ngIf="activeButton == 1"></app-dashboard>
