@@ -69,10 +69,10 @@ class StockRepo:
                 return affected_rows
     
     @staticmethod
-    def update_stock(quantity: int, amount_invested: float):
+    def update_stock(ticker: str, quantity: int, amount_invested: float):
         with get_db_connection() as (conn, cursor):
-                stmt = 'update stocks set quantity=%s amount_invested=%s'
-                params = (quantity, amount_invested)
+                stmt = 'update stocks set quantity=%s, amount_invested=%s where ticker=%s'
+                params = (quantity, amount_invested, ticker)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount
