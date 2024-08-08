@@ -36,3 +36,12 @@ create table value(
     inflow float,
     outflow float
 );
+
+insert into accounts values('aaa', 'HDFC Bank', 'savings', 200000);
+insert into accounts values('bbb', 'IDBI Bank', 'current', 100000);
+
+insert into stocks values('AAPL', 'NASDAQ', 'large', 'Apple Inc', 100, 20700, 'aaa');
+insert into stocks values('NVDA', 'NASDAQ', 'large', 'NVIDIA Corp', 100, 10425, 'bbb');
+insert into stocks values('MSFT', 'NASDAQ', 'large', 'Microsoft Corp', 100, 40000, 'bbb');
+insert into stocks values('UL', 'NASDAQ', 'large', 'Teradata Corp', 100, 2505, 'bbb');
+insert into stocks values('WMT', 'NYSE', 'large', 'Walmart Inc', 100, 6700, 'aaa');
