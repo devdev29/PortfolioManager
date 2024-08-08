@@ -20,12 +20,16 @@ def update_flows(amount: float, account_no: str):
     AccountRepo.update_amount(account_no, amount)
     #Update total cash flows
     value_row = ValueRepo.get_value(date.today(), dynamic=False)
-    inflow = value_row['inflow']
-    outflow = value_row['outflow']
-    inflow += amount
-    outflow += amount
-    ValueRepo.update_inflow(inflow) 
-    ValueRepo.update_outflow(outflow)
+    if amount > 0:
+        # selling should increase inflow
+        inflow = value_row['inflow']
+        inflow += amount
+        ValueRepo.update_inflow(inflow)
+    else:
+        # buying should increase outflow
+        outflow = value_row['outflow']
+        outflow += amount 
+        ValueRepo.update_outflow(outflow)
 
 @stocks.route('/search/<ticker_search>', methods=['GET'])
 def get_valid_stocks(ticker_search: str):
@@ -60,7 +64,7 @@ def add_stock():
         new_stock = Stock(**data)
         StockRepo.add_new_stock(new_stock)
         #Update account state and flows due to stock addition
-        update_flows(amount=amount, account_no=data['account_no'])
+        update_flows(amount=-amount, account_no=data['account_no'])
         return jsonify(new_stock), 201
     except InsufficientFundsError as e:
         return jsonify({'message': str(e)}), 400
@@ -79,9 +83,9 @@ def delete_stock(ticker: str):
         price_res = requests.get(
             f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
-        amount = -float(price_res['price'])*int(stock['quantity'])
-        update_flows(amount, stock['account_no'])
         StockRepo.remove_stock(ticker)
+        amount = float(price_res['price'])*int(stock['quantity'])
+        update_flows(amount, stock['account_no'])
         return jsonify(ticker), 202
     except StockDoesNotExistError as e:
         return jsonify({'message': str(e)})
@@ -97,9 +101,9 @@ def update_stock():
             f'https://api.twelvedata.com/price?symbol={data["ticker"]}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
         amount = float(price_res['price'])*int(data['quantity'])
-        data['amount_invested'] = amount
-        update_flows(amount, data['account_no'])
-        StockRepo.update_stock(data['quantity'])
+        flow = data['amount_invested']-amount
+        StockRepo.update_stock(quantity=data['quantity'], amount_invested=amount)
+        update_flows(flow, data['account_no'])
         return jsonify(data), 204
     except Exception as e:
         logging.exception(e)

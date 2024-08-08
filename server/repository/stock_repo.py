@@ -32,14 +32,14 @@ class StockRepo:
             params = (ticker,)
             cursor.execute(stmt, params=params)
             stock = cursor.fetchone()
-            if not stock:
-                raise StockDoesNotExistError(ticker)
             return stock
     
     @staticmethod
     def get_stock_returns(ticker: str):
         ticker = ticker.upper()
         stock = StockRepo.get_stock_by_ticker(ticker)
+        if not stock:
+            raise StockDoesNotExistError(ticker)
         price_res = requests.get(
         f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
@@ -69,10 +69,10 @@ class StockRepo:
                 return affected_rows
     
     @staticmethod
-    def update_stock(quantity: int):
+    def update_stock(quantity: int, amount_invested: float):
         with get_db_connection() as (conn, cursor):
-                stmt = 'update stocks set quantity=%s'
-                params = (quantity,)
+                stmt = 'update stocks set quantity=%s amount_invested=%s'
+                params = (quantity, amount_invested)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount
@@ -81,6 +81,9 @@ class StockRepo:
     @staticmethod
     def remove_stock(ticker: str):
         with get_db_connection() as (conn, cursor):
+                stock = StockRepo.get_stock_by_ticker(ticker)
+                if not stock:
+                    raise StockDoesNotExistError(ticker)
                 stmt = 'delete from stocks where ticker=%s'
                 params = (ticker,)
                 cursor.execute(stmt, params=params)

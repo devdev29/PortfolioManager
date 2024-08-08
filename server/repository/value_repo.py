@@ -20,7 +20,7 @@ class ValueRepo:
             cursor.execute(stmt, params=(yesterday,))
             yesterday_exists = cursor.fetchone()
             if yesterday_exists:
-                stmt = 'update value set values(%s, %s, %s)'
+                stmt = 'insert into value values(%s, %s, %s, %s)'
                 yesterday_exists['value'] = float(yesterday_exists['value']) + StockRepo.get_total_returns()
                 params = astuple(yesterday_exists)
                 cursor.execute(stmt, params=params)
