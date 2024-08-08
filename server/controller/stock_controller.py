@@ -33,22 +33,34 @@ def update_flows(amount: float, account_no: str):
 
 @stocks.route('/search/<ticker_search>', methods=['GET'])
 def get_valid_stocks(ticker_search: str):
-    ticker_search = ticker_search.upper()
-    res = requests.get(
-        f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&apikey={os.environ["FMP_API_KEY"]}'
-        ).json()
-    return jsonify(res)
+    try:
+        ticker_search = ticker_search.upper()
+        res = requests.get(
+            f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&apikey={os.environ["FMP_API_KEY"]}'
+            ).json()
+        return jsonify(res)
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
 
 @stocks.route('/portfolio/<ticker_search>', methods=['GET'])
 def get_portfolio_stocks(ticker_search: str):
-    ticker_search = ticker_search.strip().upper()
-    stocks = StockRepo.search_stock_by_ticker(ticker_search)
-    return jsonify(stocks), 200
+    try:
+        ticker_search = ticker_search.strip().upper()
+        stocks = StockRepo.search_stock_by_ticker(ticker_search)
+        return jsonify(stocks), 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
 
 @stocks.route('/portfolio/all', methods=['GET'])
 def get_all_stocks():
-    stocks = StockRepo.get_all_stocks()
-    return jsonify(stocks), 200
+    try:
+        stocks = StockRepo.get_all_stocks()
+        return jsonify(stocks), 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
 
 @stocks.route('/portfolio', methods=['POST'])
 def add_stock():
@@ -111,8 +123,12 @@ def update_stock():
 
 @stocks.route('/portfolio/returns', methods=['GET'])
 def get_total_returns():
-    total_returns = StockRepo.get_total_returns()
-    return {'returns': total_returns}, 200
+    try:
+        total_returns = StockRepo.get_total_returns()
+        return {'returns': total_returns}, 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
 
 @stocks.route('/portfolio/returns/<ticker>', methods=['GET'])
 def get_returns(ticker: str):
@@ -128,19 +144,23 @@ def get_returns(ticker: str):
 @stocks.route('/portfolio/performance', methods=['GET'])
 def get_stock_performance():
     #TODO: find api that gives stock performance
-    performance={'gainers':[], 'losers':[]}
-    all_stocks = StockRepo.get_all_stocks()
-    for stock in all_stocks:
-        ticker = stock['ticker']
-        stock_quote = requests.get(
-            f'https://api.twelvedata.com/quote?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
-        ).json()
-        float_percent = float(stock_quote['percent_change'])
-        if float_percent > 0:
-            performance['gainers'].append({ticker: float_percent})
-        else:
-            performance['losers'].append({ticker: float_percent})
-        
-    performance['gainers'] = sorted(performance['gainers'], key = lambda gainer: float(list(gainer.values())[0]))
-    performance['losers'] = sorted(performance['losers'], key = lambda loser: float(list(loser.values())[0]), reverse=True)
-    return performance, 200
+    try:
+        performance={'gainers':[], 'losers':[]}
+        all_stocks = StockRepo.get_all_stocks()
+        for stock in all_stocks:
+            ticker = stock['ticker']
+            stock_quote = requests.get(
+                f'https://api.twelvedata.com/quote?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
+            ).json()
+            float_percent = float(stock_quote['percent_change'])
+            if float_percent > 0:
+                performance['gainers'].append({ticker: float_percent})
+            else:
+                performance['losers'].append({ticker: float_percent})
+            
+        performance['gainers'] = sorted(performance['gainers'], key = lambda gainer: float(list(gainer.values())[0]))
+        performance['losers'] = sorted(performance['losers'], key = lambda loser: float(list(loser.values())[0]), reverse=True)
+        return performance, 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
