@@ -1,4 +1,7 @@
-from exceptions import StockAlreadyExistsError
+import requests
+import os
+
+from exceptions import StockAlreadyExistsError, StockDoesNotExistError
 from repository.database_access import get_db_connection
 from model.stock_model import Stock
 
@@ -31,6 +34,27 @@ class StockRepo:
             stock = cursor.fetchone()
             return stock
     
+    @staticmethod
+    def get_stock_returns(ticker: str):
+        ticker = ticker.upper()
+        stock = StockRepo.get_stock_by_ticker(ticker)
+        if not stock:
+            raise StockDoesNotExistError(ticker)
+        price_res = requests.get(
+        f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
+        ).json()
+        curr_price = float(price_res['price'])*int(stock['quantity'])
+        stock_return = float(stock['amount_invested'])-curr_price
+        return stock_return
+
+    @staticmethod
+    def get_total_returns():
+        total_returns = 0
+        stocks = StockRepo.get_all_stocks()
+        for stock in stocks:
+            total_returns += StockRepo.get_stock_returns(stock['ticker'])
+        return total_returns
+
     @staticmethod
     def add_new_stock(stock: Stock):
         with get_db_connection() as (conn, cursor):
