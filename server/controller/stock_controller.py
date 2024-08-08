@@ -6,7 +6,7 @@ from datetime import date
 from flask import Blueprint, jsonify, request
 
 from model.stock_model import Stock
-from exceptions import InsufficientFundsError, StockDoesNotExistError
+from exceptions import InsufficientFundsError, StockDoesNotExistError, StockAlreadyExistsError
 from repository.stock_repo import StockRepo
 from repository.account_repo import AccountRepo
 from repository.value_repo import ValueRepo
@@ -19,7 +19,7 @@ STOCK_EXCHANGE = 'nasdaq'
 def update_flows(amount: float, account_no: str):
     AccountRepo.update_amount(account_no, amount)
     #Update total cash flows
-    value_row = ValueRepo.get_value(date.today())
+    value_row = ValueRepo.get_value(date.today(), dynamic=False)
     inflow = value_row['inflow']
     outflow = value_row['outflow']
     inflow += amount
@@ -56,13 +56,15 @@ def add_stock():
             f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
         amount = float(price_res['price'])*int(data['quantity'])
-        #Update account state and flows due to stock addition
-        update_flows(amount=amount, account_no=data['account_no'])
         data['amount_invested'] = amount
         new_stock = Stock(**data)
         StockRepo.add_new_stock(new_stock)
+        #Update account state and flows due to stock addition
+        update_flows(amount=amount, account_no=data['account_no'])
         return jsonify(new_stock), 201
     except InsufficientFundsError as e:
+        return jsonify({'message': str(e)}), 400
+    except StockAlreadyExistsError as e:
         return jsonify({'message': str(e)}), 400
     except Exception as e:
         logging.exception(e)
@@ -73,14 +75,16 @@ def add_stock():
 def delete_stock(ticker: str):
     # TODO: add logic to update liquid balance in account
     try:
-        stock = StockRepo.get_stock_by_ticker(ticker)[0]
+        stock = StockRepo.get_stock_by_ticker(ticker)
         price_res = requests.get(
             f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
-        amount = price_res['price']*stock['quantity']
-        update_flows(amount, stock.account_no)
+        amount = -float(price_res['price'])*int(stock['quantity'])
+        update_flows(amount, stock['account_no'])
         StockRepo.remove_stock(ticker)
         return jsonify(ticker), 202
+    except StockDoesNotExistError as e:
+        return jsonify({'message': str(e)})
     except Exception as e:
         logging.exception(e)
         return jsonify({'message': 'could not remove stock'}), 409

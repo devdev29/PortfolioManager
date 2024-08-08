@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from dataclasses import astuple
 
 from repository.database_access import get_db_connection
 from repository.stock_repo import StockRepo
@@ -20,8 +21,8 @@ class ValueRepo:
             yesterday_exists = cursor.fetchone()
             if yesterday_exists:
                 stmt = 'update value set values(%s, %s, %s)'
-                yesterday_exists[0]['value'] = float(yesterday_exists[0]['value']) + StockRepo.get_total_returns()
-                params = yesterday_exists[0].to_list()
+                yesterday_exists['value'] = float(yesterday_exists['value']) + StockRepo.get_total_returns()
+                params = astuple(yesterday_exists)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 return
@@ -32,14 +33,15 @@ class ValueRepo:
             conn.commit()
     
     @staticmethod
-    def get_value(day: date):
+    def get_value(day: date, dynamic: bool):
         ValueRepo.initialise_value(day)
         with get_db_connection() as (_, cursor):
             stmt = 'select * from value where day=%s'
             params = (day,)
             cursor.execute(stmt, params=params)
             value = cursor.fetchone()
-            value['value'] = float(value['value']) + StockRepo.get_total_returns()
+            if dynamic:
+                value['value'] = float(value['value']) + StockRepo.get_total_returns()
             return value
     
     @staticmethod
@@ -63,10 +65,12 @@ class ValueRepo:
     @staticmethod
     def update_value_row(value: Value):
         with get_db_connection() as (conn, cursor):
-            today = value['day']
+            today = value.day
             ValueRepo.initialise_value(today)
-            stmt = 'update value set value(%s, %s, %s) where day=%s'
-            params = (*value.to_list(), today)
+            stmt = 'update value set inflow=%s, outflow=%s where day=%s'
+            params = (*astuple(value), today)
+            params = params[2:]
+            print(params)
             cursor.execute(stmt, params=params)
             conn.commit()
             affected_rows = cursor.rowcount
@@ -76,8 +80,9 @@ class ValueRepo:
     def update_inflow(inflow: float):
         today = date.today()
         ValueRepo.initialise_value(today)
-        value_row = ValueRepo.get_value(today)
+        value_row = ValueRepo.get_value(today, dynamic=False)
         value_row['inflow'] = inflow
+        value_row = Value(**value_row)
         res = ValueRepo.update_value_row(value_row)
         return res
     
@@ -85,8 +90,9 @@ class ValueRepo:
     def update_outflow(outflow: float):
         today = date.today()
         ValueRepo.initialise_value(today)
-        value_row = ValueRepo.get_value(today)
+        value_row = ValueRepo.get_value(today, dynamic=False)
         value_row['outflow'] = outflow
+        value_row = Value(**value_row)
         res = ValueRepo.update_value_row(value_row)
         return res
     

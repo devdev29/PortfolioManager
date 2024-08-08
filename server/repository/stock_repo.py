@@ -1,6 +1,6 @@
 import requests
 import os
-
+from dataclasses import astuple
 from exceptions import StockAlreadyExistsError, StockDoesNotExistError
 from repository.database_access import get_db_connection
 from model.stock_model import Stock
@@ -32,14 +32,14 @@ class StockRepo:
             params = (ticker,)
             cursor.execute(stmt, params=params)
             stock = cursor.fetchone()
+            if not stock:
+                raise StockDoesNotExistError(ticker)
             return stock
     
     @staticmethod
     def get_stock_returns(ticker: str):
         ticker = ticker.upper()
         stock = StockRepo.get_stock_by_ticker(ticker)
-        if not stock:
-            raise StockDoesNotExistError(ticker)
         price_res = requests.get(
         f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
@@ -62,7 +62,7 @@ class StockRepo:
                 if exists:
                     raise StockAlreadyExistsError(stock.ticker)
                 stmt = 'insert into stocks values(%s, %s, %s, %s, %s, %s, %s)'
-                params = stock.to_list()
+                params = astuple(stock)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount

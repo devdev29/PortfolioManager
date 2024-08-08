@@ -13,5 +13,5 @@ value = Blueprint('value', __name__)
 @value.route('/today')
 def get_today_value():
     today = date.today()
-    value_today = ValueRepo.get_value(today)
+    value_today = ValueRepo.get_value(today, dynamic=True)
     return jsonify(value_today), 200

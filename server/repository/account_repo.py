@@ -1,3 +1,4 @@
+from dataclasses import astuple
 from repository.database_access import get_db_connection
 from model.account_model import Account
 from exceptions import InsufficientFundsError
@@ -25,7 +26,7 @@ class AccountRepo:
     def add_account(account: Account):
         with get_db_connection() as (conn, cursor):
                 stmt = 'insert into accounts values(%s, %s, %s, %s)'
-                params = account.to_list()
+                params = astuple(account)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount

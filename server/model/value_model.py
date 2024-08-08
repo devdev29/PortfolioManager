@@ -7,11 +7,3 @@ class Value:
     value: float
     inflow: float
     outflow: float
-
-    def to_list(self):
-        return [
-            self.day,
-            self.value,
-            self.inflow,
-            self.outflow,
-        ]
