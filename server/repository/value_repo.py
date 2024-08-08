@@ -20,13 +20,14 @@ class ValueRepo:
             yesterday_exists = cursor.fetchone()
             if yesterday_exists:
                 stmt = 'update value set values(%s, %s, %s)'
+                yesterday_exists[0]['value'] = float(yesterday_exists[0]['value']) + StockRepo.get_total_returns()
                 params = yesterday_exists[0].to_list()
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 return
             total_value = StockRepo.get_total_returns() + AccountRepo.get_total_balance()
-            value_today = (total_value, 0, 0)
-            stmt = 'insert into value values(%s, %s, %s)'
+            value_today = (day, total_value, 0, 0)
+            stmt = 'insert into value values(%s, %s, %s, %s)'
             cursor.execute(stmt, params=value_today)
             conn.commit()
     
@@ -35,10 +36,10 @@ class ValueRepo:
         ValueRepo.initialise_value(day)
         with get_db_connection() as (_, cursor):
             stmt = 'select * from value where day=%s'
-            params = (day)
+            params = (day,)
             cursor.execute(stmt, params=params)
             value = cursor.fetchone()
-            value = float(value[0]['value']) + StockRepo.get_total_returns()
+            value['value'] = float(value['value']) + StockRepo.get_total_returns()
             return value
     
     @staticmethod
