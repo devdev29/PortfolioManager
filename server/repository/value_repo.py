@@ -32,7 +32,6 @@ class ValueRepo:
     
     @staticmethod
     def get_value(day: date):
-        # TODO: update value with total returns before getting
         ValueRepo.initialise_value(day)
         with get_db_connection() as (_, cursor):
             stmt = 'select * from value where day=%s'
