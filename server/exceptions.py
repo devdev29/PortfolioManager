@@ -16,3 +16,9 @@ class StockDoesNotExistError(Exception):
     def __str__(self) -> str:
         return f'Stock {self.stock} does not exist in the portfolio.'
     
+class AccountDoesNotExistError(Exception):
+    def __init__(self, account_no):
+        self.account_no = account_no
+    def __str__(self) :
+        return f'Account {self.account_no} does not exist'
+    
