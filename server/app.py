@@ -1,6 +1,9 @@
 from flask import Flask
+from load_dotenv import load_dotenv
 
 from controller.stock_controller import stocks
+
+load_dotenv('.env')
 
 app = Flask(__name__)
 
