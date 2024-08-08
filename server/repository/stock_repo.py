@@ -1,3 +1,7 @@
+import requests
+import os
+from dataclasses import astuple
+from exceptions import StockAlreadyExistsError, StockDoesNotExistError
 from repository.database_access import get_db_connection
 from model.stock_model import Stock
 
@@ -15,8 +19,8 @@ class StockRepo:
     def search_stock_by_ticker(ticker: str):
         with get_db_connection() as (_, cursor):
             ticker = ticker.upper()
-            stmt = 'select * from stocks where ticker like %s%'
-            cursor.execute(stmt, params=(ticker))
+            stmt = 'select * from stocks where ticker like concat(%s, "%")'
+            cursor.execute(stmt, params=(ticker,))
             stocks = cursor.fetchall()
             return stocks
     
@@ -25,47 +29,65 @@ class StockRepo:
         with get_db_connection() as (_, cursor):
             ticker = ticker.upper()
             stmt = 'select * from stocks where ticker=%s'
-            params = (ticker)
+            params = (ticker,)
             cursor.execute(stmt, params=params)
             stock = cursor.fetchone()
             return stock
     
     @staticmethod
+    def get_stock_returns(ticker: str):
+        ticker = ticker.upper()
+        stock = StockRepo.get_stock_by_ticker(ticker)
+        if not stock:
+            raise StockDoesNotExistError(ticker)
+        price_res = requests.get(
+        f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
+        ).json()
+        curr_price = float(price_res['price'])*int(stock['quantity'])
+        stock_return = float(stock['amount_invested'])-curr_price
+        return stock_return
+
+    @staticmethod
+    def get_total_returns():
+        total_returns = 0
+        stocks = StockRepo.get_all_stocks()
+        for stock in stocks:
+            total_returns += StockRepo.get_stock_returns(stock['ticker'])
+        return total_returns
+
+    @staticmethod
     def add_new_stock(stock: Stock):
         with get_db_connection() as (conn, cursor):
-            try:
+                exists = StockRepo.get_stock_by_ticker(stock.ticker)
+                if exists:
+                    raise StockAlreadyExistsError(stock.ticker)
                 stmt = 'insert into stocks values(%s, %s, %s, %s, %s, %s, %s)'
-                params = stock.to_list()
+                params = astuple(stock)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
-            except:
-                return -1
     
     @staticmethod
-    def update_stock(stock: Stock):
+    def update_stock(ticker: str, quantity: int, amount_invested: float):
         with get_db_connection() as (conn, cursor):
-            try:
-                stmt = 'update stocks set values(%s, %s, %s, %s, %s, %s, %s)'
-                params = stock.to_list()
+                stmt = 'update stocks set quantity=%s, amount_invested=%s where ticker=%s'
+                params = (quantity, amount_invested, ticker)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
-            except:
-                return -1
     
     @staticmethod
     def remove_stock(ticker: str):
         with get_db_connection() as (conn, cursor):
-            try:
+                stock = StockRepo.get_stock_by_ticker(ticker)
+                if not stock:
+                    raise StockDoesNotExistError(ticker)
                 stmt = 'delete from stocks where ticker=%s'
-                params = (ticker)
+                params = (ticker,)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
-            except:
-                return -1
     
