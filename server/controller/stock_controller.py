@@ -109,13 +109,14 @@ def delete_stock(ticker: str):
 def update_stock():
     try:
         data = request.json
+        stock = StockRepo.get_stock_by_ticker(data['ticker'])
         price_res = requests.get(
             f'https://api.twelvedata.com/price?symbol={data["ticker"]}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
         amount = float(price_res['price'])*int(data['quantity'])
-        flow = data['amount_invested']-amount
-        StockRepo.update_stock(quantity=data['quantity'], amount_invested=amount)
-        update_flows(flow, data['account_no'])
+        flow = float(stock['amount_invested'])-amount
+        StockRepo.update_stock(data['ticker'], quantity=data['quantity'], amount_invested=amount)
+        update_flows(flow, stock['account_no'])
         return jsonify(data), 204
     except Exception as e:
         logging.exception(e)
