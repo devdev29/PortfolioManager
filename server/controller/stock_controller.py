@@ -90,7 +90,11 @@ def update_stock():
     try:
         data = request.json
         price_res = requests.get(
+<<<<<<< Updated upstream
             f'https://api.twelvedata.com/price?symbol={data["ticker"]}&apikey={os.environ["TWELVE_API_KEY"]}'
+=======
+            f'https://api.twelvedata.com/price?symbol={data["ticker"]}&exchange={STOCK_EXCHANGE}&apikey={os.environ["TWELVE_API_KEY"]}'
+>>>>>>> Stashed changes
         ).json()
         amount = float(price_res['price'])*int(data['quantity'])
         data['amount_invested'] = amount
