@@ -39,6 +39,7 @@ class ValueRepo:
             params = (day)
             cursor.execute(stmt, params=params)
             value = cursor.fetchone()
+            value = float(value[0]['value']) + StockRepo.get_total_returns()
             return value
     
     @staticmethod
