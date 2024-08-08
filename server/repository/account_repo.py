@@ -62,3 +62,11 @@ class AccountRepo:
             account.amount = new_amount
             affected_rows = AccountRepo._update_account(account)
             return affected_rows
+    
+    @staticmethod
+    def get_total_balance():
+        balance = 0
+        accounts = AccountRepo.get_accounts()
+        for account in accounts:
+            balance += float(account['amount'])
+        return balance
