@@ -28,6 +28,7 @@ create table mutual_funds(
     net_asset_value float,
     quantity bigint,
     amount_invested float,
+    account_no varchar(255),
     foreign key (account_no) references accounts(account_no)
 );
 
