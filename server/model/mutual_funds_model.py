@@ -7,6 +7,7 @@ class MutualFunds:
     mf_id: int
     __quantity: int
     __amount_invested: float
+    account_no: str
     
     @property
     def quantity(self):
@@ -28,7 +29,9 @@ class MutualFunds:
         return [
             self.name,
             self.net_asset_value,
+            self.mf_id,
             self.__quantity,
-            self.__amount_invested
+            self.__amount_invested,
+            self.account_no
         ]
     
