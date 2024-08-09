@@ -13,15 +13,15 @@
             <h1><fa-icon style="margin-right: 1rem;" [icon]="faWallet"></fa-icon>CASH</h1>
             <div class="asset-cash-list" *ngFor="let comp of cashComponents">
                 <p class="asset-cash-list-head">
-                    <span>{{comp.bankName}}</span>
+                    <span>{{comp.bank_name}}</span>
                 </p>
                 <div class="asset-cash-list-left">
-                    <p>Account Number: <b>{{comp.accountNumber}}</b></p>
-                    <p>Account Type: <b>{{comp.accountType}}</b></p>
+                    <p>Account Number: <b>{{comp.account_no}}</b></p>
+                    <p>Account Type: <b>{{comp.account_type}}</b></p>
                 </div>
                 <div class="asset-cash-list-right">
                     <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">Balance: </p>
-                    <p><b>{{comp.balance| number : '1.2-2'}}</b></p>
+                    <p><b>{{comp.amount | number : '1.2-2'}}</b></p>
                 </div>
             </div>
         </div>

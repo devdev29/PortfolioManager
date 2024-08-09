@@ -3,6 +3,11 @@ import { Component, signal } from "@angular/core";
 import { PortfolioCash } from 'src/model/portfolio-cash.model';
 import { PortfolioStocks } from 'src/model/portfolio-stocks.model';
 import { faWallet, faMoneyBillTrendUp } from '@fortawesome/free-solid-svg-icons';
+import { HttpClient } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
+import { AppComponent } from '../app.component';
+import { AppRoutingModule } from '../app-routing.module';
+import { Router } from '@angular/router';
 
 @Component ({
     selector : 'app-asset',
@@ -16,42 +21,52 @@ export class AssetComponent {
     public faWallet = faWallet;
     public faMoneyBillTrendUp = faMoneyBillTrendUp;
     readonly panelOpenState = signal(false);
-    public cashComponents: PortfolioCash[] = [
-        {
-            accountNumber: 'XXXX',
-            bankName: 'SBI',
-            balance: 15000,
-            accountType: 'savings'
-        },
-        {
-            accountNumber: 'XXXX',
-            bankName: 'Yes Bank',
-            balance: 15000,
-            accountType: 'savings'
+
+    public cashComponents: PortfolioCash[] = [];
+    public stockComponents: PortfolioStocks[] = [];
+
+    constructor(private http: HttpClient, private app: AppComponent, private router: Router) { }
+
+    errorHandler(error: {
+        error: { message: string; };
+        status: any; message: any;
+    }) {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) {
+            errorMessage = error.error.message;
+        } 
+        else {
+            errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
         }
-    ];
-    public stockComponents: PortfolioStocks[] = [
-        {
-            ticker: 'AAPL',
-            full_name: 'Apple Inc',
-            quantity: 100,
-            market_cap: 'large',
-            exchange: 'NYSE',
-            account_no: 'aaa',
-            amount_invested: 20700.00
-        },
-        {
-            account_no: "bbb",
-            amount_invested: 40000.0,
-            exchange: "NYSE",
-            full_name: "Microsoft Corp",
-            market_cap: "large",
-            quantity: 100,
-            ticker: "MSFT"
-        }
-    ];
+        return throwError(errorMessage);
+    }
+
+    getStocks(): Observable<any> {
+        return this.http.get(this.app.domain + 'stocks/portfolio/all').pipe(catchError(this.errorHandler));
+    }
+
+    getCash(): Observable<any> {
+        return this.http.get(this.app.domain + 'accounts/all').pipe(catchError(this.errorHandler));
+    }
+
+    updateStock(body: any): Observable<any> {
+        return this.http.put(this.app.domain + 'stocks/portfolio', body).pipe(catchError(this.errorHandler));
+    }
+
+    deleteStock(ticker: string): Observable<any> {
+        return this.http.delete(this.app.domain + 'stocks/portfolio/' + ticker).pipe(catchError(this.errorHandler));
+    }
 
     ngOnInit(): void {
+        this.getCash().subscribe(data => {
+            console.log(data);
+            this.cashComponents = data;
+        });
+
+        this.getStocks().subscribe(data => {
+            console.log(data);
+            this.stockComponents = data;
+        });
         // this.createSpendingChart();
         // this.createIncomeChart();
     }
@@ -130,16 +145,43 @@ export class AssetComponent {
         const count = Number(stockCount);
         if (!isNaN(count)) {
             console.log(`Buying ${count} stocks of ${this.stockComponents[i].full_name}`);
-        } else {
+            var final_qty = this.stockComponents[i].quantity + count;
+            var body = {
+                'ticker': this.stockComponents[i].ticker,
+                'quantity': final_qty
+            };
+            this.updateStock(body).subscribe(data => {
+                console.log(data);
+                window.location.reload();
+            });
+        } 
+        else {
             console.error('Invalid input for stock count');
         }
     }
 
     sellStocks(i: number, stockCount: string): void {
         const count = Number(stockCount);
-        if (!isNaN(count)) {
+        if (!isNaN(count) && count < this.stockComponents[i].quantity) {
             console.log(`Selling ${count} stocks of ${this.stockComponents[i].full_name}`);
-        } else {
+            var final_qty = this.stockComponents[i].quantity - count;
+            var body = {
+                'ticker': this.stockComponents[i].ticker,
+                'quantity': final_qty
+            };
+            this.updateStock(body).subscribe(data => {
+                console.log(data);
+                window.location.reload();
+            });
+        }
+        else if (!isNaN(count) && count == this.stockComponents[i].quantity) {
+            console.log(`Got to close this account of ${this.stockComponents[i].full_name}`);
+            this.deleteStock(this.stockComponents[i].ticker).subscribe(data => {
+                console.log(data);
+                window.location.reload();
+            });
+        }
+        else {
             console.error('Invalid input for stock count');
         }
     }

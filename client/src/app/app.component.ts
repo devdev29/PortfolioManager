@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent { 
-  title = 'Croissant Dashboard';
+    title = 'Croissant Dashboard';
+    public domain = 'http://localhost:5000/';
 }

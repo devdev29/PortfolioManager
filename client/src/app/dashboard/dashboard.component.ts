@@ -1,7 +1,9 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, AfterViewInit, Injectable } from '@angular/core';
 import { faArrowTrendDown, faArrowTrendUp } from '@fortawesome/free-solid-svg-icons';
 import { Chart, registerables } from 'chart.js';
-
+import { Observable } from 'rxjs';
+import { AppComponent } from '../app.component';
 
 @Component ({
     selector : 'app-dashboard',
@@ -9,63 +11,78 @@ import { Chart, registerables } from 'chart.js';
     styleUrls : ['./dashboard.component.css']
 })
 
+@Injectable({
+    providedIn: 'root'
+})
+
 export class DashboardComponent implements OnInit, AfterViewInit {
     public chart: any;
-    public gainersList: any = [
-		{
-			"AAPL": 1.24982
-		}
-	];
+
+    public portfolioValuation: number = 0;
+
+    public gainersList: any = [];
     public gainersListKeys: string[] = [];
     public gainersListValues: number[] = [];
-    public losersList: any = [
-		{
-			"MSFT": -0.29529
-		},
-		{
-			"UL": -0.35878
-		},
-		{
-			"WMT": -1.22526
-		},
-		{
-			"NVDA": -5.1223
-		}
-	];
+    public losersList: any = [];
     public losersListKeys: string[] = [];
     public losersListValues: number[] = [];
     public faArrowTrendUp = faArrowTrendUp;
     public faArrowTrendDown = faArrowTrendDown;
 
+    private apiUrl = this.app.domain + 'portfolio/';
+
+    constructor(private http: HttpClient, private app: AppComponent) { }
+
+    getPortfolioValue(): Observable<any> {
+        return this.http.get(this.app.domain + 'value/today');
+    }
+
+    getGainersLosers(): Observable<any> {
+        return this.http.get(this.app.domain + 'stocks/portfolio/performance');
+    }
+
     ngOnInit(): void {
         Chart.register(...registerables);
+        
+        this.getPortfolioValue().subscribe(data => {
+            console.log(data);
+            this.portfolioValuation = data.value;
+        });
 
+        this.getGainersLosers().subscribe(data => {
+            this.gainersList = data.gainers;
+            this.losersList = data.losers;
+            console.log(this.gainersList);
+            console.log(this.losersList);
+
+            this.losersListKeys = [];
+            this.losersListValues = [];
+
+            for(var i=0; i<this.losersList.length; i++) {
+                const key = Object.keys(this.losersList[i])[0];
+                const value = this.losersList[i][key];
+                
+                this.losersListKeys.push(key);
+                this.losersListValues.push(-1*value);
+            }
+
+            this.gainersListKeys = [];
+            this.gainersListValues = [];
+            
+            for(var i=0; i<this.gainersList.length; i++) {
+                const key = Object.keys(this.gainersList[i])[0];
+                const value = this.gainersList[i][key];
+                
+                this.gainersListKeys.push(key);
+                this.gainersListValues.push(value);
+            }
+        });
     }
 
     ngAfterViewInit(): void {
         this.renderChart();
 
-        this.losersListKeys = [];
-        this.losersListValues = [];
-
-        for(var i=0; i<this.losersList.length; i++) {
-            const key = Object.keys(this.losersList[i])[0];
-            const value = this.losersList[i][key];
-            
-            this.losersListKeys.push(key);
-            this.losersListValues.push(-1*value);
-        }
-
-        this.gainersListKeys = [];
-        this.gainersListValues = [];
         
-        for(var i=0; i<this.gainersList.length; i++) {
-            const key = Object.keys(this.gainersList[i])[0];
-            const value = this.gainersList[i][key];
-            
-            this.gainersListKeys.push(key);
-            this.gainersListValues.push(value);
-        }
     }
 
     renderChart(): void {
