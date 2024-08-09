@@ -11,8 +11,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AssetComponent } from './asset/asset.component';
 import { HeaderComponent } from './header/header.component';
-import { MatExpansionModule } from '@angular/material/expansion';
-
 
 @NgModule({
   declarations: [
@@ -29,8 +27,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     AppRoutingModule,
     FontAwesomeModule,
     MatButtonToggleModule,
-    BrowserAnimationsModule,
-    MatExpansionModule
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

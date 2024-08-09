@@ -1,6 +1,7 @@
 .header-container {
     margin: 0;
     padding: 1.5rem 2rem;
+    padding-top: 0;
     border-bottom: 0.1px solid #d4d7d7;
     padding-bottom: 0px;
 }

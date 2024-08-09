@@ -85,6 +85,6 @@ button.menu_btn.transparent.active span {
 .menu-right {
     flex-grow: 1; 
     padding: 1rem 0rem;
-    padding-left: 24rem; 
+    padding-left: 23rem; 
     overflow-y: scroll;
 }
