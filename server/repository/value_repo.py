@@ -70,7 +70,6 @@ class ValueRepo:
             stmt = 'update value set inflow=%s, outflow=%s where day=%s'
             params = (*astuple(value), today)
             params = params[2:]
-            print(params)
             cursor.execute(stmt, params=params)
             conn.commit()
             affected_rows = cursor.rowcount
