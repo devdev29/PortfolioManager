@@ -1,6 +1,6 @@
 import requests
 import os
-
+from dataclasses import astuple
 from exceptions import StockAlreadyExistsError, StockDoesNotExistError
 from repository.database_access import get_db_connection
 from model.stock_model import Stock
@@ -62,17 +62,17 @@ class StockRepo:
                 if exists:
                     raise StockAlreadyExistsError(stock.ticker)
                 stmt = 'insert into stocks values(%s, %s, %s, %s, %s, %s, %s)'
-                params = stock.to_list()
+                params = astuple(stock)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
     
     @staticmethod
-    def update_stock(stock: Stock):
+    def update_stock(ticker: str, quantity: int, amount_invested: float):
         with get_db_connection() as (conn, cursor):
-                stmt = 'update stocks set values(%s, %s, %s, %s, %s, %s, %s)'
-                params = stock.to_list()
+                stmt = 'update stocks set quantity=%s, amount_invested=%s where ticker=%s'
+                params = (quantity, amount_invested, ticker)
                 cursor.execute(stmt, params=params)
                 conn.commit()
                 affected_rows = cursor.rowcount
@@ -81,6 +81,9 @@ class StockRepo:
     @staticmethod
     def remove_stock(ticker: str):
         with get_db_connection() as (conn, cursor):
+                stock = StockRepo.get_stock_by_ticker(ticker)
+                if not stock:
+                    raise StockDoesNotExistError(ticker)
                 stmt = 'delete from stocks where ticker=%s'
                 params = (ticker,)
                 cursor.execute(stmt, params=params)

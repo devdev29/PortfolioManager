@@ -6,7 +6,7 @@ from datetime import date
 from flask import Blueprint, jsonify, request
 
 from model.stock_model import Stock
-from exceptions import InsufficientFundsError, StockDoesNotExistError
+from exceptions import InsufficientFundsError, StockDoesNotExistError, StockAlreadyExistsError
 from repository.stock_repo import StockRepo
 from repository.account_repo import AccountRepo
 from repository.value_repo import ValueRepo
@@ -19,32 +19,48 @@ STOCK_EXCHANGE = 'nasdaq'
 def update_flows(amount: float, account_no: str):
     AccountRepo.update_amount(account_no, amount)
     #Update total cash flows
-    value_row = ValueRepo.get_value(date.today())[0]
-    inflow = value_row['inflow']
-    outflow = value_row['outflow']
-    inflow += amount
-    outflow += amount
-    ValueRepo.update_inflow(inflow) 
-    ValueRepo.update_outflow(outflow)
+    value_row = ValueRepo.get_value(date.today(), dynamic=False)
+    if amount > 0:
+        # selling should increase inflow
+        inflow = value_row['inflow']
+        inflow += amount
+        ValueRepo.update_inflow(inflow)
+    else:
+        # buying should increase outflow
+        outflow = value_row['outflow']
+        outflow += amount 
+        ValueRepo.update_outflow(outflow)
 
 @stocks.route('/search/<ticker_search>', methods=['GET'])
 def get_valid_stocks(ticker_search: str):
-    ticker_search = ticker_search.upper()
-    res = requests.get(
-        f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&apikey={os.environ["FMP_API_KEY"]}'
-        ).json()
-    return jsonify(res)
+    try:
+        ticker_search = ticker_search.upper()
+        res = requests.get(
+            f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&apikey={os.environ["FMP_API_KEY"]}'
+            ).json()
+        return jsonify(res)
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
 
 @stocks.route('/portfolio/<ticker_search>', methods=['GET'])
 def get_portfolio_stocks(ticker_search: str):
-    ticker_search = ticker_search.strip().upper()
-    stocks = StockRepo.search_stock_by_ticker(ticker_search)
-    return jsonify(stocks), 200
+    try:
+        ticker_search = ticker_search.strip().upper()
+        stocks = StockRepo.search_stock_by_ticker(ticker_search)
+        return jsonify(stocks), 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
 
 @stocks.route('/portfolio/all', methods=['GET'])
 def get_all_stocks():
-    stocks = StockRepo.get_all_stocks()
-    return jsonify(stocks), 200
+    try:
+        stocks = StockRepo.get_all_stocks()
+        return jsonify(stocks), 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
 
 @stocks.route('/portfolio', methods=['POST'])
 def add_stock():
@@ -56,13 +72,15 @@ def add_stock():
             f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
         amount = float(price_res['price'])*int(data['quantity'])
-        #Update account state and flows due to stock addition
-        update_flows(amount=amount, account_no=data['account_no'])
         data['amount_invested'] = amount
         new_stock = Stock(**data)
         StockRepo.add_new_stock(new_stock)
+        #Update account state and flows due to stock addition
+        update_flows(amount=-amount, account_no=data['account_no'])
         return jsonify(new_stock), 201
     except InsufficientFundsError as e:
+        return jsonify({'message': str(e)}), 400
+    except StockAlreadyExistsError as e:
         return jsonify({'message': str(e)}), 400
     except Exception as e:
         logging.exception(e)
@@ -73,14 +91,16 @@ def add_stock():
 def delete_stock(ticker: str):
     # TODO: add logic to update liquid balance in account
     try:
-        stock = StockRepo.get_stock_by_ticker(ticker)[0]
+        stock = StockRepo.get_stock_by_ticker(ticker)
         price_res = requests.get(
             f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
-        amount = price_res['price']*stock['quantity']
-        update_flows(amount, stock.account_no)
         StockRepo.remove_stock(ticker)
+        amount = float(price_res['price'])*int(stock['quantity'])
+        update_flows(amount, stock['account_no'])
         return jsonify(ticker), 202
+    except StockDoesNotExistError as e:
+        return jsonify({'message': str(e)})
     except Exception as e:
         logging.exception(e)
         return jsonify({'message': 'could not remove stock'}), 409
@@ -89,23 +109,27 @@ def delete_stock(ticker: str):
 def update_stock():
     try:
         data = request.json
+        stock = StockRepo.get_stock_by_ticker(data['ticker'])
         price_res = requests.get(
             f'https://api.twelvedata.com/price?symbol={data["ticker"]}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
         amount = float(price_res['price'])*int(data['quantity'])
-        data['amount_invested'] = amount
-        update_flows(amount, data['account_no'])
-        stock = Stock(**data)
-        StockRepo.update_stock(stock=stock)
-        return jsonify(stock), 204
+        flow = float(stock['amount_invested'])-amount
+        StockRepo.update_stock(data['ticker'], quantity=data['quantity'], amount_invested=amount)
+        update_flows(flow, stock['account_no'])
+        return jsonify(data), 204
     except Exception as e:
         logging.exception(e)
         return {'message': 'could not update stock'}, 409
 
 @stocks.route('/portfolio/returns', methods=['GET'])
 def get_total_returns():
-    total_returns = StockRepo.get_total_returns()
-    return {'returns': total_returns}, 200
+    try:
+        total_returns = StockRepo.get_total_returns()
+        return {'returns': total_returns}, 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409
 
 @stocks.route('/portfolio/returns/<ticker>', methods=['GET'])
 def get_returns(ticker: str):
@@ -121,19 +145,23 @@ def get_returns(ticker: str):
 @stocks.route('/portfolio/performance', methods=['GET'])
 def get_stock_performance():
     #TODO: find api that gives stock performance
-    performance={'gainers':[], 'losers':[]}
-    all_stocks = StockRepo.get_all_stocks()
-    for stock in all_stocks:
-        ticker = stock['ticker']
-        stock_quote = requests.get(
-            f'https://api.twelvedata.com/quote?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
-        ).json()
-        float_percent = float(stock_quote['percent_change'])
-        if float_percent > 0:
-            performance['gainers'].append({ticker: float_percent})
-        else:
-            performance['losers'].append({ticker: float_percent})
-        
-    performance['gainers'] = sorted(performance['gainers'], key = lambda gainer: float(list(gainer.values())[0]))
-    performance['losers'] = sorted(performance['losers'], key = lambda loser: float(list(loser.values())[0]), reverse=True)
-    return performance, 200
+    try:
+        performance={'gainers':[], 'losers':[]}
+        all_stocks = StockRepo.get_all_stocks()
+        for stock in all_stocks:
+            ticker = stock['ticker']
+            stock_quote = requests.get(
+                f'https://api.twelvedata.com/quote?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
+            ).json()
+            float_percent = float(stock_quote['percent_change'])
+            if float_percent > 0:
+                performance['gainers'].append({ticker: float_percent})
+            else:
+                performance['losers'].append({ticker: float_percent})
+            
+        performance['gainers'] = sorted(performance['gainers'], key = lambda gainer: float(list(gainer.values())[0]))
+        performance['losers'] = sorted(performance['losers'], key = lambda loser: float(list(loser.values())[0]), reverse=True)
+        return performance, 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({'message', 'could not get stocks'}), 409

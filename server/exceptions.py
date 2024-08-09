@@ -28,3 +28,9 @@ class MutualFundDoesNotExistError(Exception):
     def __str__(self) -> str:
         return f'Mutual Fund {self.mutual_fund} does not exist in the portfolio.'
     
+class AccountDoesNotExistError(Exception):
+    def __init__(self, account_no):
+        self.account_no = account_no
+    def __str__(self) :
+        return f'Account {self.account_no} does not exist'
+    
