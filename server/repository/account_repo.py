@@ -1,7 +1,7 @@
 from dataclasses import astuple
 from repository.database_access import get_db_connection
 from model.account_model import Account
-from exceptions import InsufficientFundsError
+from exceptions import InsufficientFundsError, AccountDoesNotExistError
 
 class AccountRepo:
 
@@ -46,6 +46,8 @@ class AccountRepo:
     def update_amount(account_no: str, diff: float):
         with get_db_connection() as (conn, cursor):
             account = AccountRepo.get_account_by_no(account_no)
+            if not account:
+                AccountDoesNotExistError(account_no)
             new_amount = account['amount'] + diff
             if new_amount < 0:
                 raise InsufficientFundsError(account['amount'])
