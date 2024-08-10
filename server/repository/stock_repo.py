@@ -43,7 +43,7 @@ class StockRepo:
             raise StockDoesNotExistError(ticker)
         price_res = requests.get(
         f'https://financialmodelingprep.com/api/v3/quote-short/{ticker}?apikey={os.environ["FMP_API_KEY"]}'
-        ).json()
+        ).json()[0]
         curr_price = float(price_res['price'])*int(stock['quantity'])
         stock_return = float(stock['amount_invested'])-curr_price
         return stock_return
