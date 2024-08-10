@@ -1,4 +1,5 @@
 .asset-container {
+    border: 0.1px solid red;
     padding: 1rem 0rem;
 }
 

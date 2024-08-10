@@ -1,17 +1,18 @@
 section {
-    height: 100vh;
     display: flex;
     width: 100%;
+    height: calc(100vh - 2rem);
 }
 
 .menu-container {
-    background-color: #606c38;
+    background-color: #ffffff33;
     z-index: 1000;
     padding: 1.5rem;
     width: 20rem;
     height: 100%;
     position: fixed;
     overflow: hidden;
+    border-radius: 0.3rem;
 }
 
 .menu-top {
@@ -21,75 +22,58 @@ section {
 }
 
 .menu-top img {
-    height: 2rem;
-    border-radius: 20%;
-    display: inline-block;
-    padding: 0.5rem;
-    background-color: #dda15e;
-}
-
-.menu-top div {
-    display: inline-block;
-    margin-left: 1.5rem;
-    vertical-align: top;
-    padding: 0.9rem 0rem;
-}
-
-.menu-top div span {
-    color: #fefae0;
-    font-size: 1.5rem;
-    font-family: 'Grey Qo', cursive;
-    font-style: normal;
-    font-weight: 400;
+    width: 100%;
+    border-radius: 0.3rem;
 }
 
 .menu-btm {
-    padding: 4rem 1rem;
+    padding: 5rem 1rem;
 }
 
 .menu-btm button {
-    font-size: 1.1rem;
-    padding: 0.75rem;
+    padding: 1rem 0.75rem;
     margin: 1rem 0rem;
-    border-radius: 2rem;
+    border-radius: 50%;
     width: 100%;
-    background-color: #ffffff00;
     animation: none;
     border: none;
     text-align: left;
     border-radius: 2rem;
     transition: 0.75s ease;
+    background-color: #00000000;
+    display: flex;
+    align-items: center;
 }
 
 .menu-btm button fa-icon {
     margin: 0rem 0.5rem;
-    padding: 0.5rem 0.6rem;
+    padding: 0.5rem 0.65rem;
     border-radius: 50%;
-    color: #fefae0;
+    color: #000000;
+    background-color: #dda15e;
 }
 
 .menu-btm button span {
     margin: 0rem 0.5rem;
-    color: #fefae0;
+    color: #d4d7d7;
+    /* font-family: 'Ibarra Real Nova'; */
+    font-family: 'Montserrat';
+    font-size: 1.3rem;
 }
 
 .menu-btm button:hover {
-    background-color: #283618;
+    background-color: #000000;
 }
 
 .menu-btm button.active {
-    background-color: #283618;
+    background-color: #000000;
     width: 30rem;
-}
-
-button.menu_btn.transparent.active fa-icon,
-button.menu_btn.transparent.active span {
-    color: #fefae0;
 }
 
 .menu-right {
     flex-grow: 1; 
-    padding: 1rem 0rem;
+    padding: 0;
     padding-left: 23rem; 
     overflow-y: scroll;
+    padding-right: 0;
 }

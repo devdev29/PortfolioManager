@@ -6,10 +6,8 @@ import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/portfolio', pathMatch: 'full' },
-  { path: 'portfolio', component: MenuComponent },
-  // { path: 'login', component: LoginComponent }
-  
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: MenuComponent }
 ];
 
 @NgModule({

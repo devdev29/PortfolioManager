@@ -18,8 +18,17 @@ export class HeaderComponent {
     constructor(private datePipe: DatePipe) {}
     
     ngOnInit(): void {
-        var curr = new Date();
-        this.currentDateTime = this.datePipe.transform(curr, 'HH:mm\'hrs\' dd MMM yyyy');
-        
+        this.updateTime();
+        setInterval(() => this.updateTime(), 30000); 
+    }
+    
+    updateTime() {
+        const now = new Date();
+        const date = now.toLocaleDateString(); 
+        const time = now.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        this.currentDateTime = `${date} ${time}`; 
     }
 }
