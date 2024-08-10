@@ -8,7 +8,7 @@ from flask import Blueprint, jsonify, request
 from model.mutual_funds_model import MutualFunds
 from repository.mutual_funds_repo import MutualFundsRepo
 from repository.account_repo import AccountRepo
-from repository.value_repo import ValueRepo
+from repository.value_repo_mf import ValueRepoMF
 from exceptions import InsufficientFundsError, MutualFundDoesNotExistError
 
 mutual_funds = Blueprint('mutual_funds', __name__)
@@ -17,17 +17,17 @@ mutual_funds = Blueprint('mutual_funds', __name__)
 def update_flows(amount: float, account_no: str):
     AccountRepo.update_amount(account_no, amount)
     #Update total cash flows
-    value_row = ValueRepo.get_value(date.today(), dynamic=False)
+    value_row = ValueRepoMF.get_value(date.today(), dynamic=False)
     if amount > 0:
         # selling should increase inflow
         inflow = value_row['inflow']
         inflow += amount
-        ValueRepo.update_inflow(inflow)
+        ValueRepoMF.update_inflow(inflow)
     else:
         # buying should increase outflow
         outflow = value_row['outflow']
         outflow += amount 
-        ValueRepo.update_outflow(outflow)
+        ValueRepoMF.update_outflow(outflow)
 
 
 # @mutual_funds.route('/search/', methods=['GET'])
