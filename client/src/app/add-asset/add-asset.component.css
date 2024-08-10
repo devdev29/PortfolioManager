@@ -1,0 +1,15 @@
+.add-asset-container {
+    padding: 1rem 0rem;
+}
+
+app-header {
+    display: block;
+}
+
+/* add asset header css */
+.add-asset-hd-option {
+    width: 50%;
+    display: inline-block;
+    /* border: ; */
+
+}

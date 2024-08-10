@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AssetComponent } from './asset/asset.component';
 import { HeaderComponent } from './header/header.component';
+import { AddAssetComponent } from './add-asset/add-asset.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { HeaderComponent } from './header/header.component';
     MenuComponent,
     HeaderComponent,
     DashboardComponent,
-    AssetComponent
+    AssetComponent,
+    AddAssetComponent
   ],
   imports: [
     BrowserModule,

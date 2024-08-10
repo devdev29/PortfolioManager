@@ -1,0 +1,45 @@
+<section>
+    <div class="add-asset-container">
+        <app-header></app-header>
+        <div class="add-asset-header">
+            <span class="add-asset-hd-option" id="stocks-op">Buy New Stocks</span>
+            <span class="add-asset-hd-option" id="stocks-op">Buy New Mutual Funds</span>
+        </div>
+        <div class="add-stocks-form">
+            <div class="find-ticker">
+                <input id="ticker" type="text" placeholder="Enter the ticker of the stock you are searching for"
+                [(ngModel)]="ticker">
+                <select class="ticker-suggestions-box">
+                    <option class="ticker-suggestions" *ngFor="let tick of tickerOptions; let i = index;">Country</option>
+                </select>
+            </div>
+            <!-- <button class="add-asset-ticker-btn" (click)="searchTicker()" [disabled]="ticker === ''">Submit</button>
+            <br> -->
+            <label for="accountNo">Account No. to Credit/Debit Funds:</label>
+            <input type="text" id="accountNo" name="accountNo" [(ngModel)]="account_no" required>
+            <br>
+            <label for="quantity">Quantity of Stocks:</label>
+            <input type="number" id="quantity" name="quantity" [(ngModel)]="quantity" required>
+            <br>
+            <button [disabled]="ticker === ''" (click)="addStocks()">Buy</button>
+        </div>
+        <div class="add-mf-form">
+            <div class="find-ticker">
+                <input id="ticker" type="text" placeholder="Enter the ticker of the stock you are searching for"
+                [(ngModel)]="ticker">
+                <select class="ticker-suggestions-box">
+                    <option class="ticker-suggestions" *ngFor="let tick of tickerOptions">Country</option>
+                </select>
+            </div>
+            <!-- <button class="add-asset-ticker-btn" (click)="searchTicker()" [disabled]="ticker === ''">Submit</button>
+            <br> -->
+            <label for="accountNo">Account No. to Credit/Debit Funds:</label>
+            <input type="text" id="accountNo" name="accountNo" [(ngModel)]="account_no" required>
+            <br>
+            <label for="quantity">Quantity of Stocks:</label>
+            <input type="number" id="quantity" name="quantity" [(ngModel)]="quantity" required>
+            <br>
+            <button [disabled]="ticker === ''" (click)="addStocks()">Buy</button>
+        </div>
+    </div>
+</section>

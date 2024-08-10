@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import { Component, signal } from "@angular/core";
+import { Component, Injectable, signal } from "@angular/core";
 import { PortfolioCash } from 'src/model/portfolio-cash.model';
 import { PortfolioStocks } from 'src/model/portfolio-stocks.model';
 import { faWallet, faMoneyBillTrendUp } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,10 @@ import { Router } from '@angular/router';
     selector : 'app-asset',
     templateUrl : './asset.component.html',
     styleUrls : ['./asset.component.css']
+})
+
+@Injectable({
+    providedIn: 'root'
 })
 
 export class AssetComponent { 

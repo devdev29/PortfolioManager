@@ -5,13 +5,12 @@ section {
 }
 
 .menu-container {
-    background-color: #a26f4559;
+    background-color: #606c38;
     z-index: 1000;
     padding: 1.5rem;
     width: 20rem;
     height: 100%;
     position: fixed;
-    box-shadow: 1px 0px 5px 4px #1d140d;
     overflow: hidden;
 }
 
@@ -26,7 +25,7 @@ section {
     border-radius: 20%;
     display: inline-block;
     padding: 0.5rem;
-    background-color: #ecb176;
+    background-color: #dda15e;
 }
 
 .menu-top div {
@@ -37,9 +36,11 @@ section {
 }
 
 .menu-top div span {
-    color: #d4d7d7;
+    color: #fefae0;
     font-size: 1.5rem;
-    letter-spacing: 0.1rem;
+    font-family: 'Grey Qo', cursive;
+    font-style: normal;
+    font-weight: 400;
 }
 
 .menu-btm {
@@ -52,7 +53,7 @@ section {
     margin: 1rem 0rem;
     border-radius: 2rem;
     width: 100%;
-    background-color: #1d140d;
+    background-color: #ffffff00;
     animation: none;
     border: none;
     text-align: left;
@@ -64,22 +65,26 @@ section {
     margin: 0rem 0.5rem;
     padding: 0.5rem 0.6rem;
     border-radius: 50%;
-    color: #ecb176;
+    color: #fefae0;
 }
 
 .menu-btm button span {
     margin: 0rem 0.5rem;
-    color: #d4d7d7;
+    color: #fefae0;
+}
+
+.menu-btm button:hover {
+    background-color: #283618;
 }
 
 .menu-btm button.active {
-    background-color: #ecb176;
+    background-color: #283618;
     width: 30rem;
 }
 
 button.menu_btn.transparent.active fa-icon,
 button.menu_btn.transparent.active span {
-    color: #1d140d;
+    color: #fefae0;
 }
 
 .menu-right {

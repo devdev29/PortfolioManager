@@ -6,7 +6,7 @@ import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
 
 const routes: Routes = [
-  // { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/portfolio', pathMatch: 'full' },
   { path: 'portfolio', component: MenuComponent },
   // { path: 'login', component: LoginComponent }
   
