@@ -36,7 +36,7 @@ def get_valid_stocks(ticker_search: str):
     try:
         ticker_search = ticker_search.upper()
         res = requests.get(
-            f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&apikey={os.environ["FMP_API_KEY"]}'
+            f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&exchange={STOCK_EXCHANGE}&apikey={os.environ["FMP_API_KEY"]}'
             ).json()
         return jsonify(res)
     except Exception as e:
