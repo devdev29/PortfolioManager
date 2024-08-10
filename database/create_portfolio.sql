@@ -37,8 +37,16 @@ create table value(
     outflow float
 );
 
-insert into accounts values('aaa', 'HDFC Bank', 'savings', 200000);
-insert into accounts values('bbb', 'IDBI Bank', 'current', 100000);
+create table transactions(
+    id uuid primary key default uuid_generate_v4(),
+    day date,
+    price float,
+    quantity bigint,
+    amount float
+)
+
+insert into accounts values('aaa', 'Zerodha', 'demat', 200000);
+insert into accounts values('bbb', 'growww', 'demat', 100000);
 
 insert into stocks values('AAPL', 'NASDAQ', 'large', 'Apple Inc', 100, 20700, 'aaa');
 insert into stocks values('NVDA', 'NASDAQ', 'large', 'NVIDIA Corp', 100, 10425, 'bbb');
