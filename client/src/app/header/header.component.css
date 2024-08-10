@@ -1,9 +1,10 @@
 .header-container {
-    margin: 0;
+    margin: 1rem;
     padding: 1.5rem 2rem;
-    padding-top: 0;
-    border-bottom: 0.1px solid #d4d7d7;
-    padding-bottom: 0px;
+    margin-top: 0;
+    margin-right: 0;
+    background-color: #ffffff35;
+    border-radius: 0.3rem;
 }
 
 .header-greeting {
@@ -15,12 +16,14 @@
     color: #d4d7d7;
     font-size: 1.7rem;
     margin-bottom: 0.5rem;
+    font-family: 'Montserrat';
 }
 
 .header-greeting p {
     color: #d4d7d7;
     font-size: 0.8rem;
     letter-spacing: 1.25px;
+    margin-bottom: 0;
 }
 
 .header-profile {
@@ -33,13 +36,14 @@
 
 .header-profile fa-icon {
     margin: 0rem 0.5rem;
-    padding: 0.5rem 0.6rem;
+    padding: 0.5rem 0.65rem;
     border-radius: 50%;
-    background-color: #ecb176;
+    background-color: #dda15e;
     margin-right: 5rem;
 }
 
 .header-profile span {
     margin: 0rem 0.5rem;
+    font-size: 1rem;
     color: #d4d7d7;
 }

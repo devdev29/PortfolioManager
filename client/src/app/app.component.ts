@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent { 
     title = 'Croissant Dashboard';
-    public domain = 'http://localhost:5000/';
+    public domain = 'https://portfoliomanager-p7mb.onrender.com/';
 }
