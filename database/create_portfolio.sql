@@ -42,7 +42,9 @@ create table transactions(
     day date,
     price float,
     quantity bigint,
-    amount float
+    amount float,
+    account_no varchar(255),
+    foreign key (account_no) references acccounts(account_no)
 )
 
 insert into accounts values('aaa', 'Zerodha', 'demat', 200000);
