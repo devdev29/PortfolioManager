@@ -18,7 +18,7 @@ class AccountRepo:
         with get_db_connection() as (_, cursor):
             stmt = 'select * from accounts where account_no=%s'
             params = (account_no,)
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             account = cursor.fetchone()
             return account
     
@@ -27,7 +27,7 @@ class AccountRepo:
         with get_db_connection() as (conn, cursor):
                 stmt = 'insert into accounts values(%s, %s, %s, %s)'
                 params = astuple(account)
-                cursor.execute(stmt, params=params)
+                cursor.execute(stmt, params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
@@ -37,7 +37,7 @@ class AccountRepo:
         with get_db_connection() as (conn, cursor):
                 stmt = 'delete from accounts where account_no=%s'
                 params = (account_no,)
-                cursor.execute(stmt, params=params)
+                cursor.execute(stmt, params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
@@ -53,7 +53,7 @@ class AccountRepo:
                 raise InsufficientFundsError(account['amount'])
             stmt = 'update accounts set amount=%s where account_no=%s'
             params = (new_amount, account_no)
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             conn.commit()
             return new_amount
     
