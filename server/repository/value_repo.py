@@ -22,6 +22,7 @@ class ValueRepo:
             if yesterday_exists:
                 stmt = 'insert into value values(%s, %s, %s, %s)'
                 yesterday_exists['value'] = float(yesterday_exists['value']) + StockRepo.get_total_returns()
+                yesterday_exists = Value(**yesterday_exists)
                 params = astuple(yesterday_exists)
                 cursor.execute(stmt, params)
                 conn.commit()
