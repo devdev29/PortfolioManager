@@ -38,14 +38,15 @@ create table value(
 );
 
 create table transactions(
-    id uuid primary key default uuid_generate_v4(),
     day date,
+    ticker varchar(15),
     price float,
     quantity bigint,
     amount float,
     account_no varchar(255),
-    foreign key (account_no) references acccounts(account_no)
-)
+    id uuid primary key,
+    foreign key (account_no) references accounts (account_no)
+  );
 
 insert into accounts values('aaa', 'Zerodha', 'demat', 200000);
 insert into accounts values('bbb', 'growww', 'demat', 100000);
