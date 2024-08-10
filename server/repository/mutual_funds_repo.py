@@ -34,7 +34,7 @@ class MutualFundsRepo:
             return mutual_funds
     
     @staticmethod
-    def get_mutual_funds_returns(mf_id: str):
+    def get_mutual_funds_returns(mf_id: int):
         mutual_funds = MutualFundsRepo.get_mutual_funds_by_id(mf_id)
         if not mutual_funds:
             raise MutualFundDoesNotExistError(mf_id)
@@ -50,7 +50,8 @@ class MutualFundsRepo:
         total_returns = 0
         mutual_funds = MutualFundsRepo.get_all_mutual_funds()
         for mf in mutual_funds:
-            total_returns += MutualFundsRepo.get_mutual_funds_returns(mf['ticker'])
+            total_returns += MutualFundsRepo.get_mutual_funds_returns(mf['mf_id'])
+        print(total_returns)
         return total_returns
     
     @staticmethod
@@ -58,7 +59,7 @@ class MutualFundsRepo:
         with get_db_connection() as (conn, cursor):
             exists = MutualFundsRepo.get_mutual_funds_by_id(mutual_funds.mf_id)
             if exists:
-                raise MutualFundAlreadyExistsError(mutual_funds.ticker)
+                raise MutualFundAlreadyExistsError(mutual_funds.mf_id)
             stmt = 'insert into mutual_funds values(%s, %s, %s, %s, %s, %s)'
             params = astuple(mutual_funds)
             cursor.execute(stmt, params=params)
