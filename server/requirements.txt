@@ -14,9 +14,9 @@ itsdangerous==2.2.0
 Jinja2==3.1.4
 load-dotenv==0.1.0
 MarkupSafe==2.1.5
-mysql-connector-python==9.0.0
-mysqlclient==2.2.4
 packaging==24.1
+psycopg2==2.9.9
+psycopg2-binary==2.9.9
 python-dotenv==1.0.1
 pytz==2024.1
 requests==2.32.3
