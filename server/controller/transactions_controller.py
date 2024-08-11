@@ -7,8 +7,8 @@ from repository.transaction_repo import TransactionRepo
 
 transactions = Blueprint('transactions', __name__)
 
-@transactions.route('/today')
-@transactions.route('/today/<date>')
+@transactions.route('/history')
+@transactions.route('history/<date>')
 def get_transactions(date: date = date.today()):
     try:
         transactions = TransactionRepo.get_transactions(date)
