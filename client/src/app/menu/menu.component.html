@@ -1,30 +1,25 @@
 <section>
     <div class="menu-container">
         <div class="menu-top">
-            <img src="../../assets/images/logo.png">
-            <div>
-                <span>CROISSANT</span>
-            </div> 
+            <img src="../../assets/images/menu-img.png">
         </div>
         
-        <div class="menu-btm">
+        <div class="menu-btm" style="">
             <button class="menu_btn transparent" [class.active]="activeButton == 1" (click)="openDashboard()">
-                <fa-icon [icon]="faChartLine"></fa-icon><span>Dashboard</span>
+                <fa-icon [icon]="faChartLine"></fa-icon><span>Home</span>
             </button>
             <button class="menu_btn transparent" [class.active]="activeButton == 2" (click)="openAsset()">
-                <fa-icon [icon]="faSackDollar"></fa-icon><span>Assets</span>
+                <fa-icon [icon]="faSackDollar"></fa-icon><span>Portfolio</span>
             </button>
-            <button class="menu_btn transparent" [class.active]="activeButton == 3" (click)="openProfile()">
-                <fa-icon [icon]="faUser"></fa-icon><span>Update Profile</span>
+            <button class="menu_btn transparent" [class.active]="activeButton == 3" (click)="openBuySell()">
+                <fa-icon [icon]="faUser"></fa-icon><span>Orders</span>
             </button>
-            <button class="menu_btn transparent" [class.active]="activeButton == 4" (click)="openLogin()">
+            <!-- <button class="menu_btn transparent" [class.active]="activeButton == 4" (click)="openLogin()">
                 <fa-icon [icon]="faRightFromBracket"></fa-icon><span>Log Out</span>
-            </button> 
+            </button>  -->
         </div>
     </div>
+    <app-dashboard class="menu-right" *ngIf="activeButton == 1"></app-dashboard>
     <app-asset class="menu-right" *ngIf="activeButton == 2"></app-asset>
-    <!-- <div class="menu-right">
-        <app-dashboard *ngIf="activeButton == 1"></app-dashboard>
-        <app-asset *ngIf="activeButton == 2"></app-asset>
-    </div> -->
+    <app-add-asset class="menu-right" *ngIf="activeButton == 3"></app-add-asset>
 </section>

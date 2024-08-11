@@ -1,22 +1,110 @@
-section {
-    height: 100vh;
-    display: flex;
-    width: 100%;
-}
-
-app-menu {
-    width: 20rem;
-    height: 100%;
-    position: fixed;
-}
-
-.asset-right {
-    flex-grow: 1;
-    padding: 1rem 0rem;
-    padding-left: 20rem;
-    overflow-y: scroll;
+.dashboard-container {
+    padding: 0rem;
+    padding-right: 1rem;
+    margin-top: 0;
 }
 
 app-header {
     display: block;
+}
+
+.dashboard-left {
+    margin-top: 1rem;
+    display: inline-block;
+    width: 65%;
+    padding: 1.5rem;
+}
+
+.dashboard-chart-head {
+    color: #ecb176;
+    font-size: 1.75rem;
+    letter-spacing: 0.25rem;
+    margin-bottom: 1rem;
+    border: 0.1px solid red;
+}
+
+.dashboard-chart-head-left {
+    display: inline-block;
+    width: 50%;
+    text-align: left;
+}
+
+.dashboard-chart-head-right {
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+}
+
+.dashboard-chart {
+    background-color: #a26f4559;
+    box-shadow: 5px 5px 5px 0px #1d140d;
+}
+
+.dashboard-chart h1 {
+    background-color: #ecb176;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.dashboard-chart canvas {
+    width: 100% !important;
+    padding: 0rem 1rem;
+}
+
+.dashboard-chart-foot {
+    text-align: right;
+    color: #d4d7d7;
+    font-size: 0.7rem;
+    padding: 1rem;
+}
+
+.dashboard-right {
+    display: inline-block;
+    width: 28%;
+    padding: 1rem;
+    vertical-align: top;
+    margin-top: 1rem;
+}
+
+.dashboard-gainers h1,
+.dashboard-losers h1 {
+    background-color: #ecb176;
+    padding: 0.5rem 2rem;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.dashboard-gainers {
+    margin-bottom: 1rem;
+}
+
+.dashboard-gainers-list,
+.dashboard-losers-list {
+    color: #d4d7d7;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-top: 0.1px solid #ecb176;
+}
+
+.dashboard-gainers-list-left,
+.dashboard-losers-list-left {
+    display: inline-block;
+    width: 50%;
+    text-align: left;
+}
+
+.dashboard-gainers-list-right,
+.dashboard-losers-list-right {
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+}
+
+.dashboard-gainers-list-right {
+    color: rgb(100, 255, 100);
+}
+
+.dashboard-losers-list-right {
+    color: rgb(255, 100, 100);
 }

@@ -1,6 +1,33 @@
 <section>
-    <app-menu></app-menu>
-    <div class="asset-right">
+    <div class="dashboard-container">
         <app-header></app-header>
+        <div class="dashboard-left">
+            <div class="dashboard-chart-head">
+                <span class="dashboard-chart-head-left">Net Worth</span>
+                <span class="dashboard-chart-head-right">${{ portfolioValuation | number : '1.2-2' }}</span>
+            </div>
+            <div class="dashboard-chart">
+                <h1>Portfolio Trends</h1>
+                <canvas id="portfolioChart"></canvas>
+                <div class="dashboard-chart-foot"><i>data generated for the last 30 days</i></div>
+            </div>
+        </div>
+
+        <div class="dashboard-right">
+            <div class="dashboard-gainers">
+                <h1><fa-icon style="margin-right: 1rem;" [icon]="faArrowTrendUp"></fa-icon><span>YOUR GAINERS</span></h1>
+                <div class="dashboard-gainers-list" *ngFor="let stocks of gainersList; let i = index;">
+                    <span class="dashboard-gainers-list-left">{{ gainersListKeys[i] }}</span>
+                    <span class="dashboard-gainers-list-right">{{ gainersListValues[i] | number : '1.2-2' }}%</span>
+                </div>
+            </div>
+            <div class="dashboard-losers">
+                <h1><fa-icon style="margin-right: 1rem;" [icon]="faArrowTrendDown"></fa-icon><span>YOUR LOSERS</span></h1>
+                <div class="dashboard-losers-list" *ngFor="let stocks of losersList; let i = index;">
+                    <span class="dashboard-losers-list-left">{{ losersListKeys[i] }}</span>
+                    <span class="dashboard-losers-list-right">{{ losersListValues[i] | number : '1.2-2' }}%</span>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

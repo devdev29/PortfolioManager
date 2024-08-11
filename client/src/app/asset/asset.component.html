@@ -1,27 +1,50 @@
 <section>
     <div class="asset-container">
         <app-header></app-header>
-        <div class="asset-chart">
+        <!-- <div class="asset-chart">
             <div class="income-chart">
                 <canvas id="incomeChart" >{{ incomeChart }}</canvas>
             </div>
             <div class="spending-chart">
                 <canvas id="spendingChart" >{{ spendingChart }}</canvas>
             </div>
-        </div>
+        </div> -->
         <div class="asset-grp asset-cash">
             <h1><fa-icon style="margin-right: 1rem;" [icon]="faWallet"></fa-icon>CASH</h1>
             <div class="asset-cash-list" *ngFor="let comp of cashComponents">
-                <p>{{comp.bankName}}</p>
-                <p>{{comp.accountType}}</p>
-                <p>{{comp.balance}}</p>
+                <p class="asset-cash-list-head">
+                    <span>{{comp.bank_name}}</span>
+                </p>
+                <div class="asset-cash-list-left">
+                    <p>Account Number: <b>{{comp.account_no}}</b></p>
+                    <p>Account Type: <b>{{comp.account_type}}</b></p>
+                </div>
+                <div class="asset-cash-list-right">
+                    <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">Balance: </p>
+                    <p><b>{{comp.amount | number : '1.2-2'}}</b></p>
+                </div>
             </div>
         </div>
         <div class="asset-grp asset-investment">
             <h1><fa-icon style="margin-right: 1rem;" [icon]="faMoneyBillTrendUp"></fa-icon>INVESTMENTS</h1>
-            <div class="asset-stocks-list" *ngFor="let comp of stockComponents">
-                <p>{{comp.stockName}}</p>
-                <p>{{comp.quantity * comp.marketCap}}</p>
+            <div class="asset-stocks-list" *ngFor="let comp of stockComponents; let i = index">
+                <p class="asset-stocks-list-head">
+                    <span style="border-right: 1px solid #d4d7d7; padding-right: 1rem;">{{comp.ticker}}</span>
+                    <span>{{comp.full_name}}</span>
+                </p>
+                <div class="asset-stocks-list-left">
+                    <p>Quantity: <b>{{comp.quantity}}</b></p>
+                    <p>Exchange: <b>{{comp.exchange}}</b></p>
+                </div>
+                <div class="asset-stocks-list-right">
+                    <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">Invested Amount: </p>
+                    <p><b>{{comp.amount_invested | number : '1.2-2'}}</b></p>
+                </div>
+                <div class="asset-stocks-list-foot">
+                    <input #stockInput type="number" min="1" placeholder="Enter the number of stocks you want to buy or sell" required>
+                    <button (click)="buyStocks(i, stockInput.value)">BUY</button>
+                    <button (click)="sellStocks(i, stockInput.value)">SELL</button>
+                </div>
             </div>
         </div>
     </div>

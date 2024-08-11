@@ -6,17 +6,19 @@ from datetime import date
 from flask import Blueprint, jsonify, request
 
 from model.stock_model import Stock
+from model.transaction_model import Transaction
 from exceptions import InsufficientFundsError, StockDoesNotExistError, StockAlreadyExistsError
 from repository.stock_repo import StockRepo
 from repository.account_repo import AccountRepo
 from repository.value_repo import ValueRepo
+from repository.transaction_repo import TransactionRepo
 
 stocks = Blueprint('stocks', __name__)
 
 STOCK_EXCHANGE = 'nasdaq'
 
 #Helpers
-def update_flows(amount: float, account_no: str):
+def update_flows(amount: float, account_no: str, quantity: int, price: float, ticker: str):
     AccountRepo.update_amount(account_no, amount)
     #Update total cash flows
     value_row = ValueRepo.get_value(date.today(), dynamic=False)
@@ -30,13 +32,18 @@ def update_flows(amount: float, account_no: str):
         outflow = value_row['outflow']
         outflow += amount 
         ValueRepo.update_outflow(outflow)
+    # Register the transaction
+    transaction = Transaction(
+        day=date.today(), price=price, quantity=quantity, amount=amount, account_no=account_no, ticker=ticker
+    )
+    TransactionRepo.add_transaction(transaction)
 
 @stocks.route('/search/<ticker_search>', methods=['GET'])
 def get_valid_stocks(ticker_search: str):
     try:
         ticker_search = ticker_search.upper()
         res = requests.get(
-            f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&apikey={os.environ["FMP_API_KEY"]}'
+            f'https://financialmodelingprep.com/api/v3/search?query={ticker_search}&exchange={STOCK_EXCHANGE}&apikey={os.environ["FMP_API_KEY"]}'
             ).json()
         return jsonify(res)
     except Exception as e:
@@ -67,7 +74,8 @@ def add_stock():
     # TODO: add logic to calculate and adjust cash flow from given account
     try:
         data = request.json
-        ticker = data['ticker']
+        ticker = data['ticker'].upper()
+        data['ticker'] = ticker
         price_res = requests.get(
             f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
@@ -76,7 +84,7 @@ def add_stock():
         new_stock = Stock(**data)
         StockRepo.add_new_stock(new_stock)
         #Update account state and flows due to stock addition
-        update_flows(amount=-amount, account_no=data['account_no'])
+        update_flows(-amount, data['account_no'], data['quantity'], price_res['price'], ticker)
         return jsonify(new_stock), 201
     except InsufficientFundsError as e:
         return jsonify({'message': str(e)}), 400
@@ -91,13 +99,14 @@ def add_stock():
 def delete_stock(ticker: str):
     # TODO: add logic to update liquid balance in account
     try:
+        ticker = ticker.upper()
         stock = StockRepo.get_stock_by_ticker(ticker)
         price_res = requests.get(
             f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
         StockRepo.remove_stock(ticker)
         amount = float(price_res['price'])*int(stock['quantity'])
-        update_flows(amount, stock['account_no'])
+        update_flows(amount, stock['account_no'], -stock['quantity'], price_res['price'], ticker)
         return jsonify(ticker), 202
     except StockDoesNotExistError as e:
         return jsonify({'message': str(e)})
@@ -109,14 +118,16 @@ def delete_stock(ticker: str):
 def update_stock():
     try:
         data = request.json
-        stock = StockRepo.get_stock_by_ticker(data['ticker'])
+        ticker = data['ticker'].upper()
+        stock = StockRepo.get_stock_by_ticker(ticker)
         price_res = requests.get(
             f'https://api.twelvedata.com/price?symbol={data["ticker"]}&apikey={os.environ["TWELVE_API_KEY"]}'
         ).json()
         amount = float(price_res['price'])*int(data['quantity'])
         flow = float(stock['amount_invested'])-amount
-        StockRepo.update_stock(data['ticker'], quantity=data['quantity'], amount_invested=amount)
-        update_flows(flow, stock['account_no'])
+        StockRepo.update_stock(ticker=ticker, quantity=data['quantity'], amount_invested=amount)
+        qty_diff = stock['quantity']-data['quantity']
+        update_flows(flow, stock['account_no'], qty_diff, price_res['price'], ticker)
         return jsonify(data), 204
     except Exception as e:
         logging.exception(e)

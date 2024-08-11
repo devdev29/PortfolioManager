@@ -19,8 +19,9 @@ class StockRepo:
     def search_stock_by_ticker(ticker: str):
         with get_db_connection() as (_, cursor):
             ticker = ticker.upper()
-            stmt = 'select * from stocks where ticker like concat(%s, "%")'
-            cursor.execute(stmt, params=(ticker,))
+            ticker = f'{ticker}%'
+            stmt = 'select * from stocks where ticker like %s'
+            cursor.execute(stmt, (ticker,))
             stocks = cursor.fetchall()
             return stocks
     
@@ -30,7 +31,7 @@ class StockRepo:
             ticker = ticker.upper()
             stmt = 'select * from stocks where ticker=%s'
             params = (ticker,)
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             stock = cursor.fetchone()
             return stock
     
@@ -41,10 +42,10 @@ class StockRepo:
         if not stock:
             raise StockDoesNotExistError(ticker)
         price_res = requests.get(
-        f'https://api.twelvedata.com/price?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
-        ).json()
+        f'https://financialmodelingprep.com/api/v3/quote-short/{ticker}?apikey={os.environ["FMP_API_KEY"]}'
+        ).json()[0]
         curr_price = float(price_res['price'])*int(stock['quantity'])
-        stock_return = float(stock['amount_invested'])-curr_price
+        stock_return = curr_price-float(stock['amount_invested'])
         return stock_return
 
     @staticmethod
@@ -63,7 +64,7 @@ class StockRepo:
                     raise StockAlreadyExistsError(stock.ticker)
                 stmt = 'insert into stocks values(%s, %s, %s, %s, %s, %s, %s)'
                 params = astuple(stock)
-                cursor.execute(stmt, params=params)
+                cursor.execute(stmt, params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
@@ -73,7 +74,7 @@ class StockRepo:
         with get_db_connection() as (conn, cursor):
                 stmt = 'update stocks set quantity=%s, amount_invested=%s where ticker=%s'
                 params = (quantity, amount_invested, ticker)
-                cursor.execute(stmt, params=params)
+                cursor.execute(stmt, params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
@@ -86,7 +87,7 @@ class StockRepo:
                     raise StockDoesNotExistError(ticker)
                 stmt = 'delete from stocks where ticker=%s'
                 params = (ticker,)
-                cursor.execute(stmt, params=params)
+                cursor.execute(stmt, params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows

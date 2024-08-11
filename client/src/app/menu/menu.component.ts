@@ -36,7 +36,7 @@ export class MenuComponent {
         // this.router.navigate(['/asset']);
     }
 
-    openProfile() {
+    openBuySell() {
         this.activeButton = 3;
         console.log('Profile visible');
     }

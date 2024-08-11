@@ -1,18 +1,18 @@
 section {
-    height: 100vh;
     display: flex;
     width: 100%;
+    height: calc(100vh - 2rem);
 }
 
 .menu-container {
-    background-color: #a26f4559;
+    background-color: #ffffff33;
     z-index: 1000;
     padding: 1.5rem;
     width: 20rem;
     height: 100%;
     position: fixed;
-    box-shadow: 1px 0px 5px 4px #1d140d;
     overflow: hidden;
+    border-radius: 0.3rem;
 }
 
 .menu-top {
@@ -22,69 +22,58 @@ section {
 }
 
 .menu-top img {
-    height: 2rem;
-    border-radius: 20%;
-    display: inline-block;
-    padding: 0.5rem;
-    background-color: #ecb176;
-}
-
-.menu-top div {
-    display: inline-block;
-    margin-left: 1.5rem;
-    vertical-align: top;
-    padding: 0.9rem 0rem;
-}
-
-.menu-top div span {
-    color: #d4d7d7;
-    font-size: 1.5rem;
-    letter-spacing: 0.1rem;
+    width: 100%;
+    border-radius: 0.3rem;
 }
 
 .menu-btm {
-    padding: 4rem 1rem;
+    padding: 5rem 1rem;
 }
 
 .menu-btm button {
-    font-size: 1.1rem;
-    padding: 0.75rem;
+    padding: 1rem 0.75rem;
     margin: 1rem 0rem;
-    border-radius: 2rem;
+    border-radius: 50%;
     width: 100%;
-    background-color: #1d140d;
     animation: none;
     border: none;
     text-align: left;
     border-radius: 2rem;
     transition: 0.75s ease;
+    background-color: #00000000;
+    display: flex;
+    align-items: center;
 }
 
 .menu-btm button fa-icon {
     margin: 0rem 0.5rem;
-    padding: 0.5rem 0.6rem;
+    padding: 0.5rem 0.65rem;
     border-radius: 50%;
-    color: #ecb176;
+    color: #000000;
+    background-color: #dda15e;
 }
 
 .menu-btm button span {
     margin: 0rem 0.5rem;
     color: #d4d7d7;
+    /* font-family: 'Ibarra Real Nova'; */
+    font-family: 'Montserrat';
+    font-size: 1.3rem;
+}
+
+.menu-btm button:hover {
+    background-color: #000000;
 }
 
 .menu-btm button.active {
-    background-color: #ecb176;
+    background-color: #000000;
     width: 30rem;
-}
-
-button.menu_btn.transparent.active fa-icon,
-button.menu_btn.transparent.active span {
-    color: #1d140d;
 }
 
 .menu-right {
     flex-grow: 1; 
-    padding: 1rem 0rem;
-    padding-left: 24rem; 
+    padding: 0;
+    padding-left: 23rem; 
     overflow-y: scroll;
+    padding-right: 0;
 }

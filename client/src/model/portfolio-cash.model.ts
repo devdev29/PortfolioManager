@@ -1,6 +1,6 @@
 export class PortfolioCash {
-    accountNumber: string = '';
-    bankName: string = '';
-    accountType: string = '';
-    balance: number = 0;
+    account_no: string = '';
+    bank_name: string = '';
+    account_type: string = '';
+    amount: number = 0;
 }

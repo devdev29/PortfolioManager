@@ -33,4 +33,13 @@ class AccountDoesNotExistError(Exception):
         self.account_no = account_no
     def __str__(self) :
         return f'Account {self.account_no} does not exist'
+
+class AccountAlreadyExistsError(Exception):
+    def __init__(self, account_no):
+        self.account_no = account_no
+    def __str__(self) :
+        return f'Account {self.account_no} already exists'
+class InsufficientAPICredits(Exception):
+    def __str__(self) -> str:
+        return f'We have run out of API credits to fetch your request 😥. Please retry a few minutes later'
     
