@@ -20,7 +20,7 @@ class MutualFundsRepo:
     def search_mutual_funds_by_id(mf_id: int):
         with get_db_connection() as (_, cursor):
             stmt = 'select * from mutual funds where mf_id like concat(%s, "%")'
-            cursor.execute(stmt, params=(mf_id,))
+            cursor.execute(stmt, (mf_id,))
             mutual_funds = cursor.fetchall()
             return mutual_funds
     
@@ -29,7 +29,7 @@ class MutualFundsRepo:
         with get_db_connection() as (_, cursor):
             stmt = 'select * from mutual_funds where mf_id=%s'
             params = (mf_id,)
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             mutual_funds = cursor.fetchone()
             return mutual_funds
     
@@ -62,7 +62,7 @@ class MutualFundsRepo:
                 raise MutualFundAlreadyExistsError(mutual_funds.mf_id)
             stmt = 'insert into mutual_funds values(%s, %s, %s, %s, %s, %s)'
             params = astuple(mutual_funds)
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             conn.commit()
             affected_rows = cursor.rowcount
             return affected_rows
@@ -72,7 +72,7 @@ class MutualFundsRepo:
         with get_db_connection() as (conn, cursor):
                 stmt = 'update mutual_funds set quantity=%s, amount_invested=%s where mf_id=%s'
                 params = (quantity, amount_invested, mf_id)
-                cursor.execute(stmt, params=params)
+                cursor.execute(stmt, params)
                 conn.commit()
                 affected_rows = cursor.rowcount
                 return affected_rows
@@ -85,7 +85,7 @@ class MutualFundsRepo:
                 raise MutualFundDoesNotExistError(mf_id)
             stmt = 'delete from mutual_funds where mf_id=%s'
             params = (mf_id,)
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             conn.commit()
             affected_rows = cursor.rowcount
             return affected_rows
