@@ -4,17 +4,20 @@ use Portfolios;
 
 -- TODO: add users and the relationships that come with it
 
+create type account as enum('current', 'savings');
+create type mcap as enum('small', 'medium', 'large');
+
 create table accounts(
     account_no varchar(255) primary key,
     bank_name varchar(255),
-    account_type enum('current', 'savings'),
+    account_type account,
     amount float
 );
 
 create table stocks(
     ticker varchar(10) primary key, -- allow for bse tickers upto 10 characters
     exchange varchar(255),
-    market_cap enum('small', 'medium', 'high'),
+    market_cap mcap,
     full_name varchar(255),
     quantity bigint,
     amount_invested float,
