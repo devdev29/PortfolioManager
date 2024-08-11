@@ -126,7 +126,7 @@ def update_stock():
         amount = float(price_res['price'])*int(data['quantity'])
         flow = float(stock['amount_invested'])-amount
         StockRepo.update_stock(ticker=ticker, quantity=data['quantity'], amount_invested=amount)
-        qty_diff = stock['quantity']-data['quantity']
+        qty_diff = data['quantity']-stock['quantity']
         update_flows(flow, stock['account_no'], qty_diff, price_res['price'], ticker)
         return jsonify(data), 204
     except Exception as e:

@@ -6,15 +6,17 @@ from datetime import date
 from flask import Blueprint, jsonify, request
 
 from model.mutual_funds_model import MutualFunds
+from model.transaction_model import Transaction
 from repository.mutual_funds_repo import MutualFundsRepo
 from repository.account_repo import AccountRepo
 from repository.value_repo_mf import ValueRepoMF
+from repository.transaction_repo import TransactionRepo
 from exceptions import InsufficientFundsError, MutualFundDoesNotExistError
 
 mutual_funds = Blueprint('mutual_funds', __name__)
 
 #Helpers
-def update_flows(amount: float, account_no: str):
+def update_flows(amount: float, account_no: str, price: float, quantity: int, mf_id: str):
     AccountRepo.update_amount(account_no, amount)
     #Update total cash flows
     value_row = ValueRepoMF.get_value(date.today(), dynamic=False)
@@ -28,7 +30,11 @@ def update_flows(amount: float, account_no: str):
         outflow = value_row['outflow']
         outflow += amount 
         ValueRepoMF.update_outflow(outflow)
-
+    transaction = Transaction(
+        day=date.today(), price=price, quantity=quantity, amount=amount, account_no=account_no, ticker=mf_id
+    )
+    TransactionRepo.add_transaction(transaction)
+    
 
 # @mutual_funds.route('/search/', methods=['GET'])
 # def get_valid_mutual_funds():
@@ -79,10 +85,9 @@ def add_mutual_funds():
         ).json()
         amount = float(price_res['data'][0]['nav'])*int(data['quantity'])
         #Update account state and flows due to mutual fund addition
-        update_flows(amount=-amount, account_no=data['account_no'])
+        update_flows(-amount, data['account_no'], price_res['data'][0]['nav'], int(data['quantity']), mf_id)
         data['amount_invested'] = amount
         new_mf = MutualFunds(**data)
-        print(new_mf)
         MutualFundsRepo.add_new_mutual_funds(new_mf)
         return jsonify(new_mf), 201
     except InsufficientFundsError as e:
@@ -102,7 +107,7 @@ def delete_mutual_funds(mf_id: int):
         ).json()
         MutualFundsRepo.remove_mutual_funds(mf_id)
         amount = float(price_res['data'][0]['nav'])*int(mutual_funds['quantity'])
-        update_flows(amount, mutual_funds['account_no'])
+        update_flows(amount, mutual_funds['account_no'], price_res['data'][0]['nav'], int(mutual_funds['quantity']), mf_id)
         return jsonify(mf_id), 202
     except MutualFundDoesNotExistError as e:
         return jsonify({'message': str(e)})
@@ -123,7 +128,7 @@ def update_mutual_funds():
         data['amount_invested'] = amount
         flow = float(mutual_funds['amount_invested'])-amount
         MutualFundsRepo.update_mutual_funds(data['mf_id'], quantity=data['quantity'], amount_invested=amount)
-        update_flows(flow, mutual_funds['account_no'])
+        update_flows(flow, mutual_funds['account_no'], price_res['data'][0]['nav'], int(data['quantity']), mf_id)
         return jsonify(mutual_funds), 204
     except Exception as e:
         logging.exception(e)
