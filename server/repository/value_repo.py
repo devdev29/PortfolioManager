@@ -52,7 +52,7 @@ class ValueRepo:
             today = date.today()
             ValueRepo.initialise_value(today)
             start_date = today - timedelta(days=period)
-            start_value = ValueRepo.get_value(start_date)
+            start_value = ValueRepo.get_value(start_date, dynamic=False)
             if not start_value:
                 stmt = "select * from value order by day asc"
                 cursor.execute(stmt)
