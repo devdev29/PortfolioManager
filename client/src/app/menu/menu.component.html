@@ -4,7 +4,7 @@
             <img src="../../assets/images/menu-img.png">
         </div>
         
-        <div class="menu-btm" style="">
+        <div class="menu-btm">
             <button class="menu_btn transparent" [class.active]="activeButton == 1" (click)="openDashboard()">
                 <fa-icon [icon]="faChartLine"></fa-icon><span>Home</span>
             </button>
@@ -14,12 +14,13 @@
             <button class="menu_btn transparent" [class.active]="activeButton == 3" (click)="openBuySell()">
                 <fa-icon [icon]="faUser"></fa-icon><span>Orders</span>
             </button>
-            <!-- <button class="menu_btn transparent" [class.active]="activeButton == 4" (click)="openLogin()">
-                <fa-icon [icon]="faRightFromBracket"></fa-icon><span>Log Out</span>
-            </button>  -->
+            <button class="menu_btn transparent" [class.active]="activeButton == 4" (click)="openTransaction()">
+                <fa-icon [icon]="faRightFromBracket"></fa-icon><span>Account History</span>
+            </button> 
         </div>
     </div>
     <app-dashboard class="menu-right" *ngIf="activeButton == 1"></app-dashboard>
     <app-asset class="menu-right" *ngIf="activeButton == 2"></app-asset>
     <app-add-asset class="menu-right" *ngIf="activeButton == 3"></app-add-asset>
+    <app-transaction class="menu-right" *ngIf="activeButton == 4"></app-transaction>
 </section>

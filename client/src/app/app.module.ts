@@ -12,6 +12,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AssetComponent } from './asset/asset.component';
 import { HeaderComponent } from './header/header.component';
 import { AddAssetComponent } from './add-asset/add-asset.component';
+import { TransactionComponent } from './transaction/transaction.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AddAssetComponent } from './add-asset/add-asset.component';
     HeaderComponent,
     DashboardComponent,
     AssetComponent,
-    AddAssetComponent
+    AddAssetComponent,
+    TransactionComponent
   ],
   imports: [
     BrowserModule,

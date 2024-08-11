@@ -1,13 +1,12 @@
-import Chart from 'chart.js/auto';
 import { Component, Injectable, signal } from "@angular/core";
 import { PortfolioCash } from 'src/model/portfolio-cash.model';
 import { PortfolioStocks } from 'src/model/portfolio-stocks.model';
-import { faWallet, faMoneyBillTrendUp } from '@fortawesome/free-solid-svg-icons';
+import { faWallet, faMoneyBillTrendUp, faHandHoldingDollar, faHand } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AppComponent } from '../app.component';
-import { AppRoutingModule } from '../app-routing.module';
 import { Router } from '@angular/router';
+import { PortfolioMutualFunds } from 'src/model/portfolio-mf.model';
 
 @Component ({
     selector : 'app-asset',
@@ -24,10 +23,14 @@ export class AssetComponent {
     public incomeChart: any;
     public faWallet = faWallet;
     public faMoneyBillTrendUp = faMoneyBillTrendUp;
+    public faHandHoldingDollar = faHandHoldingDollar;
     readonly panelOpenState = signal(false);
 
-    public cashComponents: PortfolioCash[] = [];
-    public stockComponents: PortfolioStocks[] = [];
+    public cashComponents: PortfolioCash[] = [{"account_no":"bbb","account_type":"current","amount":100000,"bank_name":"growww"},{"account_no":"ccc","account_type":"savings","amount":50000,"bank_name":"Share Khan"},{"account_no":"aaa","account_type":"savings","amount":191358.5994,"bank_name":"Zerodha"}];
+
+    public stockComponents: PortfolioStocks[] = [{"account_no":"bbb","amount_invested":10425,"exchange":"NASDAQ","full_name":"NVIDIA Corp","market_cap":"large","quantity":100,"ticker":"NVDA"},{"account_no":"bbb","amount_invested":40000,"exchange":"NASDAQ","full_name":"Microsoft Corp","market_cap":"large","quantity":100,"ticker":"MSFT"},{"account_no":"bbb","amount_invested":2505,"exchange":"NASDAQ","full_name":"Teradata Corp","market_cap":"large","quantity":100,"ticker":"TDC"},{"account_no":"aaa","amount_invested":6700,"exchange":"NYSE","full_name":"Walmart Inc","market_cap":"large","quantity":100,"ticker":"WMT"},{"account_no":"aaa","amount_invested":12974.4006,"exchange":"NASDAQ","full_name":"Apple Inc","market_cap":"large","quantity":60,"ticker":"AAPL"},{"account_no":"aaa","amount_invested":16367,"exchange":"NYSE","full_name":"Alphabet Inc.","market_cap":"large","quantity":100,"ticker":"googl"}];
+
+    public mfComponents: PortfolioMutualFunds[] = [];
 
     constructor(private http: HttpClient, private app: AppComponent, private router: Router) { }
 
@@ -45,123 +48,50 @@ export class AssetComponent {
         return throwError(errorMessage);
     }
 
-    getStocks(): Observable<any> {
-        return this.http.get(this.app.domain + 'stocks/portfolio/all').pipe(catchError(this.errorHandler));
-    }
-
     getCash(): Observable<any> {
         return this.http.get(this.app.domain + 'accounts/all').pipe(catchError(this.errorHandler));
+    }
+
+    getFunds(): Observable<any> {
+        return this.http.get('https://portfoliomanager-a2hs.onrender.com/mutual_funds/portfolio/all').pipe(catchError(this.errorHandler));
+    }
+
+    getStocks(): Observable<any> {
+        return this.http.get(this.app.domain + 'stocks/portfolio/all').pipe(catchError(this.errorHandler));
     }
 
     updateStock(body: any): Observable<any> {
         return this.http.put(this.app.domain + 'stocks/portfolio', body).pipe(catchError(this.errorHandler));
     }
 
+    updateFunds(body: any): Observable<any> {
+        return this.http.put(this.app.domain + 'mutual_funds/portfolio', body).pipe(catchError(this.errorHandler));
+    }
+
     deleteStock(ticker: string): Observable<any> {
         return this.http.delete(this.app.domain + 'stocks/portfolio/' + ticker).pipe(catchError(this.errorHandler));
     }
 
-    ngOnInit(): void {
-        this.getCash().subscribe(data => {
-            console.log(data);
-            this.cashComponents = data;
-        });
-
-        this.getStocks().subscribe(data => {
-            console.log(data);
-            this.stockComponents = data;
-        });
-        // this.createSpendingChart();
-        // this.createIncomeChart();
+    deleteFunds(mf_id: string): Observable<any> {
+        return this.http.delete(this.app.domain + 'stocks/portfolio/' + mf_id).pipe(catchError(this.errorHandler));
     }
 
-    // createIncomeChart(): void {
-    //     this.incomeChart = new Chart("incomeChart", {
-    //         type: 'doughnut', 
-    //         data: {
-    //             labels: [ 'Wheat', 'Maize', 'Rice', 'Sugarcane', 'Cotton' ], 
-	//             datasets: [
-    //                 { 
-    //                     label: 'Income', 
-    //                     data: [9168.2, 1417.8, 3335.1, 1165.0, 2078.9],
-    //                     backgroundColor: ['#4e79a7', '#59a14f', '#f28e2c', '#e15759', '#b07aa1'],
-    //                     borderColor: ['transparent', 'transparent', 'transparent', 'transparent', 'transparent'],
-    //                     borderWidth: [1, 1, 1, 1, 1],
-    //                     hoverOffset: 4
-    //                 }
-    //             ]
-    //         },
-    //         options: { 
-    //             aspectRatio: 2.5,
-    //             plugins: {
-    //                 title: {
-    //                     display: true,
-    //                     text: 'Income $42,000',
-    //                     font: { size: 24, weight: 'bold', family: "sans-serif" },
-    //                     color: 'white',
-    //                     padding: { top: 10, bottom: 30 }
-    //                 },
-    //                 legend: {  
-    //                     display: false
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
 
-    // createSpendingChart(): void {
-    //     this.spendingChart = new Chart("spendingChart", {
-    //         type: 'doughnut', 
-    //         data: {
-    //             labels: [ 'Wheat', 'Maize', 'Rice', 'Sugarcane', 'Cotton' ], 
-	//             datasets: [
-    //                 { 
-    //                     label: 'Area and Production of Important Crops (2020-21)', 
-    //                     data: [9168.2, 1417.8, 3335.1, 1165.0, 2078.9],
-    //                     backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(153, 102, 255)'],
-    //                     hoverOffset: 4
-    //                 }
-    //             ]
-    //         },
-    //         options: { 
-    //             aspectRatio: 2.5,
-    //             plugins: {
-    //                 title: {
-    //                     display: true,
-    //                     text: 'Area and Production of Important Crops (2020-21)',
-    //                     font: { size: 24, weight: 'bold', family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif" },
-    //                     color: 'white',
-    //                     padding: { top: 10, bottom: 30 }
-    //                 },
-    //                 legend: {  
-    //                     display: true,
-    //                     labels: {
-    //                         font: { size: 14, family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif" },
-    //                         color: 'white'
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
+    ngOnInit(): void {
+        // this.getCash().subscribe(data => {
+        //     console.log(JSON.stringify(data));
+        //     this.cashComponents = data;
+        // });
 
-    buyStocks(i: number, stockCount: string): void {
-        const count = Number(stockCount);
-        if (!isNaN(count)) {
-            console.log(`Buying ${count} stocks of ${this.stockComponents[i].full_name}`);
-            var final_qty = this.stockComponents[i].quantity + count;
-            var body = {
-                'ticker': this.stockComponents[i].ticker,
-                'quantity': final_qty
-            };
-            this.updateStock(body).subscribe(data => {
-                console.log(data);
-                window.location.reload();
-            });
-        } 
-        else {
-            console.error('Invalid input for stock count');
-        }
+        // this.getStocks().subscribe(data => {
+        //     console.log(JSON.stringify(data));
+        //     this.stockComponents = data;
+        // });
+
+        // this.getFunds().subscribe(data => {
+        //     console.log(JSON.stringify(data));
+        //     this.mfComponents = data;
+        // });
     }
 
     sellStocks(i: number, stockCount: string): void {
@@ -185,6 +115,70 @@ export class AssetComponent {
                 window.location.reload();
             });
         }
+        else {
+            console.error('Invalid input for stock count');
+        }
+    }
+
+    buyStocks(i: number, stockCount: string): void {
+        const count = Number(stockCount);
+        if (!isNaN(count)) {
+            console.log(`Buying ${count} stocks of ${this.stockComponents[i].full_name}`);
+            var final_qty = this.stockComponents[i].quantity + count;
+            var body = {
+                'ticker': this.stockComponents[i].ticker,
+                'quantity': final_qty
+            };
+            this.updateStock(body).subscribe(data => {
+                console.log(data);
+                window.location.reload();
+            });
+        } 
+        else {
+            console.error('Invalid input for stock count');
+        }
+    }
+
+    sellFunds(i: number, fundCount: string): void {
+        const count = Number(fundCount);
+        if (!isNaN(count) && count < this.mfComponents[i].quantity) {
+            console.log(`Selling ${count} mutual funds of ${this.mfComponents[i].name}`);
+            var final_qty = this.mfComponents[i].quantity - count;
+            var body = {
+                'mf_id': this.mfComponents[i].mf_id,
+                'quantity': final_qty
+            };
+            this.updateFunds(body).subscribe(data => {
+                console.log(data);
+                window.location.reload();
+            });
+        }
+        else if (!isNaN(count) && count == this.stockComponents[i].quantity) {
+            console.log(`Got to close this account of ${this.mfComponents[i].name}`);
+            this.deleteFunds(this.mfComponents[i].mf_id.toString()).subscribe(data => {
+                console.log(data);
+                window.location.reload();
+            });
+        }
+        else {
+            console.error('Invalid input for mutual funds count');
+        }
+    }
+
+    buyFunds(i: number, fundCount: string): void {
+        const count = Number(fundCount);
+        if (!isNaN(count)) {
+            console.log(`Buying ${count} mutual funds of ${this.stockComponents[i].full_name}`);
+            var final_qty = this.mfComponents[i].quantity - count;
+            var body = {
+                'mf_id': this.mfComponents[i].mf_id,
+                'quantity': final_qty
+            };
+            this.updateFunds(body).subscribe(data => {
+                console.log(data);
+                window.location.reload();
+            });
+        } 
         else {
             console.error('Invalid input for stock count');
         }

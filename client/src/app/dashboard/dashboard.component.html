@@ -1,31 +1,70 @@
 <section>
     <div class="dashboard-container">
         <app-header></app-header>
-        <div class="dashboard-left">
-            <div class="dashboard-chart-head">
-                <span class="dashboard-chart-head-left">Net Worth</span>
-                <span class="dashboard-chart-head-right">${{ portfolioValuation | number : '1.2-2' }}</span>
-            </div>
-            <div class="dashboard-chart">
-                <h1>Portfolio Trends</h1>
-                <canvas id="portfolioChart"></canvas>
-                <div class="dashboard-chart-foot"><i>data generated for the last 30 days</i></div>
-            </div>
-        </div>
-
-        <div class="dashboard-right">
-            <div class="dashboard-gainers">
-                <h1><fa-icon style="margin-right: 1rem;" [icon]="faArrowTrendUp"></fa-icon><span>YOUR GAINERS</span></h1>
-                <div class="dashboard-gainers-list" *ngFor="let stocks of gainersList; let i = index;">
-                    <span class="dashboard-gainers-list-left">{{ gainersListKeys[i] }}</span>
-                    <span class="dashboard-gainers-list-right">{{ gainersListValues[i] | number : '1.2-2' }}%</span>
+        <div style="display: flex; padding: 0; margin: 0;">
+            <div class="dashboard-left">
+                <div class="dashboard-chart-head">
+                    <div class="dashboard-chart-head-op">
+                        <p class="dashboard-chart-head-op-top">Total Portfolio Value</p>
+                        <p class="dashboard-chart-head-op-btm">${{ portfolioValuation | number : '1.2-2' }}</p>
+                    </div>
+                    <div class="dashboard-chart-head-op">
+                        <p class="dashboard-chart-head-op-top">Total Returns Today</p>
+                        <p class="dashboard-chart-head-op-btm">${{ returnValue | number : '1.2-2' }}</p>
+                    </div>
+                    <div class="dashboard-chart-head-op">
+                        <p class="dashboard-chart-head-op-top">Total Inflow Today</p>
+                        <p style="color: #00bb00;" class="dashboard-chart-head-op-btm">${{ inflow | number : '1.2-2' }}</p>
+                    </div>
+                    <div class="dashboard-chart-head-op">
+                        <p class="dashboard-chart-head-op-top">Total Outflow Today</p>
+                        <p style="color: #ff0000;" class="dashboard-chart-head-op-btm">${{ outflow | number : '1.2-2' }}</p>
+                    </div>
+                </div>
+                <div class="dashboard-chart">
+                    <h1>Portfolio Trends</h1>
+                    <canvas id="portfolioChart"></canvas>
+                    <!-- <div class="dashboard-chart-foot"><i>data generated for the last 30 days</i></div> -->
+                </div>
+                <div class="dashboard-twin-chart">
+                    <div class="dashboard-twin-chart-left">
+                        <h1>Investment Distribution</h1>
+                        <div class="do-chart-container">
+                            <!-- <canvas id="companyChart"></canvas> -->
+                        </div>
+                    </div>
+                    <div class="dashboard-twin-chart-right">
+                        <h1>Market Cap Distribution</h1>
+                        <div class="do-chart-container">
+                            <!-- <canvas id="marketCapChart"></canvas> -->
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="dashboard-losers">
-                <h1><fa-icon style="margin-right: 1rem;" [icon]="faArrowTrendDown"></fa-icon><span>YOUR LOSERS</span></h1>
-                <div class="dashboard-losers-list" *ngFor="let stocks of losersList; let i = index;">
-                    <span class="dashboard-losers-list-left">{{ losersListKeys[i] }}</span>
-                    <span class="dashboard-losers-list-right">{{ losersListValues[i] | number : '1.2-2' }}%</span>
+
+            <div class="dashboard-right">
+                <div class="dashboard-gainers">
+                    <h1><fa-icon style="margin-right: 1rem;" [icon]="faArrowTrendUp"></fa-icon><span>YOUR GAINERS</span></h1>
+                    <div class="dashboard-gainers-list" *ngFor="let stocks of gainersList; let i = index;">
+                        <span class="dashboard-gainers-list-left">{{ gainersListKeys[i] }}</span>
+                        <span class="dashboard-gainers-list-right">{{ gainersListValues[i] | number : '1.2-2' }}%</span>
+                    </div>
+                </div>
+                <div class="dashboard-losers">
+                    <h1><fa-icon style="margin-right: 1rem;" [icon]="faArrowTrendDown"></fa-icon><span>YOUR LOSERS</span></h1>
+                    <div class="dashboard-losers-list" *ngFor="let stocks of losersList; let i = index;">
+                        <span class="dashboard-losers-list-left">{{ losersListKeys[i] }}</span>
+                        <span class="dashboard-losers-list-right">{{ losersListValues[i] | number : '1.2-2' }}%</span>
+                    </div>
+                </div>
+                <div class="dashboard-news">
+                    <h1><fa-icon style="margin-right: 1rem;" [icon]="faNewspaper"></fa-icon><span>NEWS TODAY</span></h1>
+                    <div class="dashboard-news-list" *ngFor="let news of newsList; let i = index;">
+                        <a class="dashboard-news-list-hd" href="{{ news.url }}" target="_blank">{{ news.title }}</a><br>
+                        <p class="dashboard-news-list-bt">
+                            {{ news.publishedAt.substring(0,10) + '  ' + news.publishedAt.substring(11,17) + 'hrs' }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

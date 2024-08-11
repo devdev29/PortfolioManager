@@ -40,9 +40,9 @@ export class MenuComponent {
         this.activeButton = 3;
         console.log('Profile visible');
     }
-    
-    openLogin() {
+
+    openTransaction() {
         this.activeButton = 4;
-        console.log('Login visible');
+        console.log('Transaction history visible');
     }
 }

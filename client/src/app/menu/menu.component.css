@@ -5,7 +5,7 @@ section {
 }
 
 .menu-container {
-    background-color: #ffffff33;
+    background-color: #ffffff22;
     z-index: 1000;
     padding: 1.5rem;
     width: 20rem;
@@ -13,6 +13,7 @@ section {
     position: fixed;
     overflow: hidden;
     border-radius: 0.3rem;
+    margin-bottom: 1rem;
 }
 
 .menu-top {

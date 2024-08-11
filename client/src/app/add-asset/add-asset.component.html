@@ -1,45 +1,62 @@
 <section>
     <div class="add-asset-container">
         <app-header></app-header>
-        <div class="add-asset-header">
-            <span class="add-asset-hd-option" id="stocks-op">Buy New Stocks</span>
-            <span class="add-asset-hd-option" id="stocks-op">Buy New Mutual Funds</span>
+        <div class="add-asset-tabs">
+            <button (click)="selectTab(1)" [class.active]="active_tab === 1">Stocks</button>
+            <button (click)="selectTab(2)" [class.active]="active_tab === 2">Mutual Funds</button>
         </div>
-        <div class="add-stocks-form">
+
+        <div class="add-stocks-form" *ngIf="active_tab === 1">
             <div class="find-ticker">
-                <input id="ticker" type="text" placeholder="Enter the ticker of the stock you are searching for"
-                [(ngModel)]="ticker">
-                <select class="ticker-suggestions-box">
-                    <option class="ticker-suggestions" *ngFor="let tick of tickerOptions; let i = index;">Country</option>
+                <p for="ticker">Ticker Number: </p><br>
+                <input id="ticker" type="text" placeholder="Enter the ticker of the stock you are searching for" 
+                (input)="searchTicker()" [(ngModel)]="ticker">
+                <div class="ticker-option-list" *ngIf="tickerOptions.length != 0">
+                    <button class="ticker-options" *ngFor="let opt of tickerOptions; let i = index" 
+                    (click)="selectTicker(i)">{{opt.symbol}} | {{opt.name}}</button>
+                </div>
+            </div>
+            <div class="add-stocks-input">
+                <label for="stock-account-select">Account No. to Credit/Debit Funds:</label>
+                <select name="stock-account-select" id="stock-account-select" [(ngModel)]="stock_account_no" 
+                (change)="fixAccountforStocks($event)" required>
+                    <option [value]="" disabled>Please choose an account: </option>
+                    <option *ngFor="let acc of accountList" [value]="acc.account_no">
+                        {{ acc.account_no }} | {{ acc.bank_name }}
+                    </option>
                 </select>
             </div>
-            <!-- <button class="add-asset-ticker-btn" (click)="searchTicker()" [disabled]="ticker === ''">Submit</button>
-            <br> -->
-            <label for="accountNo">Account No. to Credit/Debit Funds:</label>
-            <input type="text" id="accountNo" name="accountNo" [(ngModel)]="account_no" required>
-            <br>
-            <label for="quantity">Quantity of Stocks:</label>
-            <input type="number" id="quantity" name="quantity" [(ngModel)]="quantity" required>
-            <br>
-            <button [disabled]="ticker === ''" (click)="addStocks()">Buy</button>
+            <div class="add-stocks-input">
+                <label for="stock-quantity">Quantity of Stocks:</label>
+                <input type="number" id="stock-quantity" name="stock-quantity" [(ngModel)]="stock_quantity" required>
+            </div>
+            <button class="add-stocks-form-btn" [disabled]="ticker === '' || stock_account_no === '' || stock_quantity == 0" (click)="addStocks()">Buy</button>
         </div>
-        <div class="add-mf-form">
-            <div class="find-ticker">
-                <input id="ticker" type="text" placeholder="Enter the ticker of the stock you are searching for"
-                [(ngModel)]="ticker">
-                <select class="ticker-suggestions-box">
-                    <option class="ticker-suggestions" *ngFor="let tick of tickerOptions">Country</option>
+        <div class="add-mf-form" *ngIf="active_tab === 2">
+            <div class="find-mf">
+                <p for="mf_id">Mutual Fund ID: </p><br>
+                <input id="mf_id" type="number" placeholder="Enter the ID of the mutual fund you are searching for"
+                (input)="searchMF()" [(ngModel)]="mf_id">
+                <div class="mf-option-list" *ngIf="mfOptions.length != 0">
+                    <button class="mf-options" *ngFor="let opt of mfOptions; let i = index" 
+                    (click)="selectMF(i)">{{opt.mf_id}} | {{opt.name}}</button>
+                </div>
+            </div>
+            <div class="add-mf-input">
+                <label for="mf-account-select">Account No. to Credit/Debit Funds:</label>
+                <select name="mf-account-select" id="mf-account-select" [(ngModel)]="mf_account_no" 
+                (change)="fixAccountforMF($event)" required>
+                    <option [value]="" disabled>Please choose an account: </option>
+                    <option *ngFor="let acc of accountList" [value]="acc.account_no">
+                        {{ acc.account_no }} | {{ acc.bank_name }}
+                    </option>
                 </select>
             </div>
-            <!-- <button class="add-asset-ticker-btn" (click)="searchTicker()" [disabled]="ticker === ''">Submit</button>
-            <br> -->
-            <label for="accountNo">Account No. to Credit/Debit Funds:</label>
-            <input type="text" id="accountNo" name="accountNo" [(ngModel)]="account_no" required>
-            <br>
-            <label for="quantity">Quantity of Stocks:</label>
-            <input type="number" id="quantity" name="quantity" [(ngModel)]="quantity" required>
-            <br>
-            <button [disabled]="ticker === ''" (click)="addStocks()">Buy</button>
+            <div class="add-stocks-input">
+                <label for="stock-quantity">Quantity of Mutual Funds:</label>
+                <input type="number" id="stock-quantity" name="stock-quantity" [(ngModel)]="mf_quantity" required>
+            </div>
+            <button class="add-mf-form-btn" [disabled]="mf_id == 0 || mf_account_no === '' || mf_quantity == 0" (click)="addMF()">Buy</button>
         </div>
     </div>
 </section>

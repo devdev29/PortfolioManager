@@ -1,5 +1,6 @@
 .add-asset-container {
-    padding: 1rem 0rem;
+    padding: 0rem;
+    margin-top: 0;
 }
 
 app-header {
@@ -7,9 +8,161 @@ app-header {
 }
 
 /* add asset header css */
-.add-asset-hd-option {
-    width: 50%;
-    display: inline-block;
-    /* border: ; */
 
+.add-asset-tabs {
+    padding: 1rem;
+    padding-top: 0;
+}
+
+.add-asset-tabs button {
+    display: inline-block;
+    width: 50%;
+    background-color: #ffffff22;
+    font-size: 1.5rem;
+    padding: 1.5rem;
+    animation: none;
+    border: none;
+    text-align: center;
+    transition: 0.25s ease-in-out;
+    color: #dda15e;
+}
+
+.add-asset-tabs button:hover {
+    background-color: #ffffff11;
+}
+
+.add-asset-tabs button.active {
+    border-bottom: 0.3rem solid #dda15e;
+}
+
+.find-ticker,
+.find-mf {
+    margin: 0;
+    margin-left: 2rem; 
+    margin-bottom: 2rem;
+    color: #d4d7d7;
+    font-size: 1.2rem;
+    padding: 0.9rem 0rem;
+}
+
+.add-stocks-form,
+.add-mf-form {
+    background-color: #ffffff22;
+    border-radius: 0.3rem;
+    margin: 1rem;
+    margin-top: 0;
+    padding: 2rem;
+}
+
+.find-ticker input,
+.find-mf input {
+    height: 3rem;
+    width: 70%;
+    border: none;
+    padding-left: 2rem;
+    background-color: #000000;
+    color: #d4d7d7;
+    outline: none;
+    font-size: 1.25rem;
+    vertical-align: top;
+    animation: none;
+    border-radius: 1.5rem;
+}
+
+.ticker-option-list,
+.mf-option-list {
+    margin-top: 0.5rem;
+    width: 80%;
+    max-height: 10rem;
+    padding: 0.5rem 1rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #000000;
+    border-radius: 0.3rem;
+}
+
+.ticker-option-list button,
+.mf-option-list button {
+    display: block;
+    font-size: 1rem;
+    padding: 0.5rem;
+    animation: none;
+    border: none;
+    border-bottom: 0.1px solid #d4d7d765;
+    width: 100%;
+    text-align: left;
+    background-color: black;
+    color: #d4d7d7;
+}
+
+.ticker-option-list button:hover,
+.mf-option-list button:hover {
+    background-color: #ffffff22;
+}
+
+.add-stocks-input,
+.add-mf-input {
+    margin: 2rem 2rem;
+    display: flex;
+}
+
+.add-stocks-input label,
+.add-mf-input label {
+    color: #d4d7d7;
+    font-size: 1.2rem;
+    padding: 0.9rem 0rem;
+}
+
+.add-stocks-input input,
+.add-stocks-input select,
+.add-mf-input input,
+.add-mf-input select {
+    width: 50rem;
+    border: none;
+    padding: 1rem 2rem;
+    background-color: #000000;
+    color: #d4d7d7;
+    outline: none;
+    font-size: 1rem;
+    vertical-align: top;
+    animation: none;
+    border-radius: 1.5rem;
+    margin-left: 2rem;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+}
+
+.asset-stocks-input input[type=number],
+.asset-mf-input input[type=number],
+.find-mf input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.add-stocks-form-btn,
+.add-mf-form-btn {
+    font-size: 1.5rem;
+    padding: 0.75rem;
+    margin: 4rem;
+    border-radius: 1.5rem;
+    animation: none;
+    border: none;
+    text-align: center;
+    transition: 0.25s ease-in-out;
+    width: 7rem;
+    color: #d4d7d7;
+    font-weight: bold;
+    background-color: rgb(0, 160, 0);
+}
+
+.add-stocks-form-btn:hover, 
+.add-mf-form-btn:hover {
+    background-color: rgb(0, 80, 0);
+}
+
+.add-stocks-form-btn.inactive, 
+.add-mf-form-btn.inactive {
+    background-color: rgb(0, 80, 0);
 }

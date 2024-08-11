@@ -1,6 +1,5 @@
 .dashboard-container {
     padding: 0rem;
-    padding-right: 1rem;
     margin-top: 0;
 }
 
@@ -9,47 +8,57 @@ app-header {
 }
 
 .dashboard-left {
-    margin-top: 1rem;
-    display: inline-block;
-    width: 65%;
-    padding: 1.5rem;
+    flex: 0 0 65%; 
+    padding: 1rem;
+    padding-top: 0;
 }
 
 .dashboard-chart-head {
-    color: #ecb176;
-    font-size: 1.75rem;
-    letter-spacing: 0.25rem;
+    background-color: #ffffff22;
+    font-size: 1.1rem;
     margin-bottom: 1rem;
-    border: 0.1px solid red;
+    border-radius: 0.3rem;
 }
 
-.dashboard-chart-head-left {
+.dashboard-chart-head-op {
+    color: #d4d7d7;
     display: inline-block;
-    width: 50%;
-    text-align: left;
+    width: 25%;
 }
 
-.dashboard-chart-head-right {
-    display: inline-block;
-    width: 50%;
-    text-align: right;
+.dashboard-chart-head-op-top {
+    color: #dda15e;
+    padding: 0.5rem 0.5rem;
+    margin: 0;
+    text-align: center;
+    border-bottom: 0.3rem solid #dda15e;
+}
+
+.dashboard-chart-head-op-btm {
+    color: #d7d7d7;
+    padding: 0.5rem 0.5rem;
+    margin: 0;
+    text-align: center;
 }
 
 .dashboard-chart {
-    background-color: #a26f4559;
-    box-shadow: 5px 5px 5px 0px #1d140d;
+    background-color: #ffffff22;
+    margin-bottom: 1rem;
+    padding-bottom: 2rem;
 }
 
 .dashboard-chart h1 {
-    background-color: #ecb176;
     font-size: 1.5rem;
     margin-bottom: 1rem;
     text-align: center;
+    padding: 1rem 0rem;
+    color: #dda15e;
+    border-bottom: 0.3rem solid #dda15e;
 }
 
 .dashboard-chart canvas {
     width: 100% !important;
-    padding: 0rem 1rem;
+    padding: 0rem 1.5rem;
 }
 
 .dashboard-chart-foot {
@@ -59,32 +68,75 @@ app-header {
     padding: 1rem;
 }
 
-.dashboard-right {
+.dashboard-twin-chart-left,
+.dashboard-twin-chart-right {
+    background-color: #ffffff22;
     display: inline-block;
-    width: 28%;
-    padding: 1rem;
+    width: 50%;
+}
+
+.dashboard-twin-chart-left h1,
+.dashboard-twin-chart-right h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    padding: 1rem 0rem;
+    color: #dda15e;
+    border-bottom: 0.3rem solid #dda15e;
+}
+
+.do-chart-container {
+    width: 25rem;
+    height: 20rem;
+    padding: 1.5rem;
+    margin: auto;
+}
+
+.dashboard-twin-chart-left canvas,
+.dashboard-twin-chart-right canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.dashboard-right {
+    flex: 1; 
+    padding-right: 1rem;
     vertical-align: top;
-    margin-top: 1rem;
+}
+
+.dashboard-gainers,
+.dashboard-losers,
+.dashboard-news {
+    background-color: #ffffff22;
+    font-size: 1.2rem;
+    margin: 0;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
 }
 
 .dashboard-gainers h1,
-.dashboard-losers h1 {
-    background-color: #ecb176;
-    padding: 0.5rem 2rem;
+.dashboard-losers h1,
+.dashboard-news h1 {
+    color: #dda15e;
+    padding: 0.5rem;
     font-size: 1.2rem;
     margin: 0;
-}
-
-.dashboard-gainers {
-    margin-bottom: 1rem;
+    border-bottom: 0.3rem solid #dda15e;
 }
 
 .dashboard-gainers-list,
-.dashboard-losers-list {
+.dashboard-losers-list,
+.dashboard-news-list {
     color: #d4d7d7;
     font-size: 1rem;
-    padding: 0.5rem;
-    border-top: 0.1px solid #ecb176;
+    padding: 1rem;
+    border-bottom: 0.1px solid #d4d7d765;
+}
+
+.dashboard-gainers-list:last-of-type,
+.dashboard-losers-list:last-of-type,
+.dashboard-news-list:last-of-type {
+    border-bottom: none;
 }
 
 .dashboard-gainers-list-left,
@@ -102,9 +154,25 @@ app-header {
 }
 
 .dashboard-gainers-list-right {
-    color: rgb(100, 255, 100);
+    color: #00bb00;
 }
 
 .dashboard-losers-list-right {
-    color: rgb(255, 100, 100);
+    color: #ff0000;
+}
+
+.dashboard-news-list-hd {
+    text-decoration: none;
+    color: #d4d7d7;
+    font-size: 1rem;
+}
+
+.dashboard-news-list-hd:hover {
+    color: #dda15e;
+}
+
+.dashboard-news-list-bt {
+    font-size: 0.7rem;
+    text-align: right;
+    margin-bottom: 0;
 }
