@@ -15,7 +15,7 @@ create table accounts(
 );
 
 create table stocks(
-    ticker varchar(10) primary key, -- allow for bse tickers upto 10 characters
+    ticker varchar(10) primary key, -- allow for nyse tickers upto 10 characters
     exchange varchar(255),
     market_cap mcap,
     full_name varchar(255),
@@ -26,11 +26,13 @@ create table stocks(
 );
 
 create table mutual_funds(
-    name varchar(255) primary key,
-    amount float,
+    name varchar(255) ,
+    mf_id int primary key,
     net_asset_value float,
-    total_return float,
-    date_invested date
+    quantity bigint,
+    amount_invested float,
+    account_no varchar(255),
+    foreign key (account_no) references accounts(account_no)
 );
 
 create table value(
