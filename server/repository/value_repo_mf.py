@@ -14,11 +14,11 @@ class ValueRepoMF:
         with get_db_connection() as (conn, cursor):
             yesterday = day - timedelta(1)
             stmt = 'select * from value where day=%s'
-            cursor.execute(stmt, params=(day,))
+            cursor.execute(stmt, (day,))
             exists = cursor.fetchone()
             if exists:
                 return
-            cursor.execute(stmt, params=(yesterday,))
+            cursor.execute(stmt, (yesterday,))
             yesterday_exists = cursor.fetchone()
             if yesterday_exists:
                 stmt = 'insert into value values(%s, %s, %s, %s)'
@@ -27,13 +27,13 @@ class ValueRepoMF:
                 yesterday_exists = Value(**yesterday_exists)
                 print(yesterday_exists)
                 params = astuple(yesterday_exists)
-                cursor.execute(stmt, params=params)
+                cursor.execute(stmt, params)
                 conn.commit()
                 return
             total_value = MutualFundsRepo.get_total_returns() + AccountRepo.get_total_balance()
             value_today = (day, total_value, 0, 0)
             stmt = 'insert into value values(%s, %s, %s, %s)'
-            cursor.execute(stmt, params=value_today)
+            cursor.execute(stmt, value_today)
             conn.commit()
     
     @staticmethod
@@ -42,7 +42,7 @@ class ValueRepoMF:
         with get_db_connection() as (_, cursor):
             stmt = 'select * from value where day=%s'
             params = (day,)
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             value = cursor.fetchone()
             if dynamic:
                 value['value'] = float(value['value']) + MutualFundsRepo.get_total_returns()
@@ -62,7 +62,7 @@ class ValueRepoMF:
                 start_date = days[0]
             stmt = "select * from value where day >= %s"
             params = (start_date,)
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             history = cursor.fetchall()
             return history
     
@@ -74,7 +74,7 @@ class ValueRepoMF:
             stmt = 'update value set inflow=%s, outflow=%s where day=%s'
             params = (*astuple(value), today)
             params = params[2:]
-            cursor.execute(stmt, params=params)
+            cursor.execute(stmt, params)
             conn.commit()
             affected_rows = cursor.rowcount
             return affected_rows
