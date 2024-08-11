@@ -9,7 +9,7 @@ app-header {
 
 /* add asset header css */
 
-.add-asset-tabs {
+/* .add-asset-tabs {
     padding: 1rem;
     padding-top: 0;
 }
@@ -33,6 +33,16 @@ app-header {
 
 .add-asset-tabs button.active {
     border-bottom: 0.3rem solid #dda15e;
+} */
+
+.add-asset-head {
+    background-color: #ffffff22;
+    font-size: 1.75rem;
+    padding: 1.5rem;
+    color: #dda15e;
+    border-bottom: 0.3rem solid #dda15e;
+    margin-bottom: 0;
+    margin: 0rem 1rem;
 }
 
 .find-ticker,

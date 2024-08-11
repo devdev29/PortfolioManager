@@ -6,3 +6,58 @@
 app-header {
     display: block;
 }
+
+.transaction-cont {
+    background-color: #ffffff22;
+    border-radius: 0.3rem;
+    margin: 0rem 1rem;
+}
+
+.transaction-head {
+    font-size: 1.5rem;
+    padding: 2rem 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.3rem solid #dda15e;
+}
+
+.transaction-head-left {
+    vertical-align: top;
+    display: inline-block;
+    width: 70%;
+    color: #dda15e;
+    padding-top: 1rem;
+}
+
+.transaction-head-right {
+    display: inline-block;
+    width: 20%;
+    color: #d4d7d7;
+}
+
+.transaction-btm {
+    padding: 2rem;
+}
+
+table {
+    width: 100%;
+    align-self: center;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    color: #d4d7d7;
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+th, td {
+    text-align: center;
+    padding: 1rem;
+}
+
+.transaction-table-rows {
+    border-top: 0.1px solid #d4d7d765;
+    transition: 0.5s ease-in-out;
+}
+
+.transaction-table-rows:hover {
+    background-color: #ffffff26;
+}

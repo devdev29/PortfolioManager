@@ -1,5 +1,15 @@
 <main>
   <section class="complete-content">
     <router-outlet></router-outlet>
+    <!-- <div class="alert">
+      <div *ngIf="successAlert == true" class="alert-box-pos">
+        <span class="msg">{{ alertMessageSuccess }}</span>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+      </div>
+      <div *ngIf="failureAlert == true" class="alert-box-neg">
+        <span class="msg">{{ alertMessageFailure }}</span>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+      </div>
+    </div> -->
   </section>
 </main>

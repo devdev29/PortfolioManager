@@ -10,7 +10,12 @@
                     </div>
                     <div class="dashboard-chart-head-op">
                         <p class="dashboard-chart-head-op-top">Total Returns Today</p>
-                        <p class="dashboard-chart-head-op-btm">${{ returnValue | number : '1.2-2' }}</p>
+                        <p style="color: #00bb00;" *ngIf="returnValue >= 0" class="dashboard-chart-head-op-btm">
+                            ${{ returnValue | number : '1.2-2' }}
+                        </p>
+                        <p style="color: #ff0000;" *ngIf="returnValue < 0" class="dashboard-chart-head-op-btm">
+                            ${{ returnValue | number : '1.2-2' }}
+                        </p>
                     </div>
                     <div class="dashboard-chart-head-op">
                         <p class="dashboard-chart-head-op-top">Total Inflow Today</p>
@@ -24,19 +29,18 @@
                 <div class="dashboard-chart">
                     <h1>Portfolio Trends</h1>
                     <canvas id="portfolioChart"></canvas>
-                    <!-- <div class="dashboard-chart-foot"><i>data generated for the last 30 days</i></div> -->
                 </div>
                 <div class="dashboard-twin-chart">
                     <div class="dashboard-twin-chart-left">
                         <h1>Investment Distribution</h1>
                         <div class="do-chart-container">
-                            <!-- <canvas id="companyChart"></canvas> -->
+                            <canvas id="companyChart"></canvas>
                         </div>
                     </div>
                     <div class="dashboard-twin-chart-right">
                         <h1>Market Cap Distribution</h1>
                         <div class="do-chart-container">
-                            <!-- <canvas id="marketCapChart"></canvas> -->
+                            <canvas id="marketCapChart"></canvas>
                         </div>
                     </div>
                 </div>

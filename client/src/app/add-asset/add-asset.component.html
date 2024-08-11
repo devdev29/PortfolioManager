@@ -1,11 +1,12 @@
 <section>
     <div class="add-asset-container">
         <app-header></app-header>
-        <div class="add-asset-tabs">
+        <!-- <div class="add-asset-tabs">
             <button (click)="selectTab(1)" [class.active]="active_tab === 1">Stocks</button>
             <button (click)="selectTab(2)" [class.active]="active_tab === 2">Mutual Funds</button>
-        </div>
+        </div> -->
 
+        <h1 class="add-asset-head">Purchase Stocks</h1>
         <div class="add-stocks-form" *ngIf="active_tab === 1">
             <div class="find-ticker">
                 <p for="ticker">Ticker Number: </p><br>
@@ -30,9 +31,14 @@
                 <label for="stock-quantity">Quantity of Stocks:</label>
                 <input type="number" id="stock-quantity" name="stock-quantity" [(ngModel)]="stock_quantity" required>
             </div>
-            <button class="add-stocks-form-btn" [disabled]="ticker === '' || stock_account_no === '' || stock_quantity == 0" (click)="addStocks()">Buy</button>
+            <div class="add-stocks-input">
+                <label for="stock-quantity">Price per Unit:</label>
+                <input type="number" id="stock-quantity" name="stock-quantity" [(ngModel)]="stock_price" disabled>
+            </div>
+            <button class="add-stocks-form-btn" [disabled]="ticker === '' || stock_account_no === '' || stock_quantity == 0" 
+            (click)="addStocks()">Buy</button>
         </div>
-        <div class="add-mf-form" *ngIf="active_tab === 2">
+        <!-- <div class="add-mf-form" *ngIf="active_tab === 2">
             <div class="find-mf">
                 <p for="mf_id">Mutual Fund ID: </p><br>
                 <input id="mf_id" type="number" placeholder="Enter the ID of the mutual fund you are searching for"
@@ -56,7 +62,7 @@
                 <label for="stock-quantity">Quantity of Mutual Funds:</label>
                 <input type="number" id="stock-quantity" name="stock-quantity" [(ngModel)]="mf_quantity" required>
             </div>
-            <button class="add-mf-form-btn" [disabled]="mf_id == 0 || mf_account_no === '' || mf_quantity == 0" (click)="addMF()">Buy</button>
-        </div>
+            <button class="add-mf-form-btn" [disabled]="mf_id == 0 || mf_account_no === '' || mf_quantity == 0" (click)="addMF()">Buy</button> 
+        </div> -->
     </div>
 </section>

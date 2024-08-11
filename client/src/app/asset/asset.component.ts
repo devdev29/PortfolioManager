@@ -26,9 +26,9 @@ export class AssetComponent {
     public faHandHoldingDollar = faHandHoldingDollar;
     readonly panelOpenState = signal(false);
 
-    public cashComponents: PortfolioCash[] = [{"account_no":"bbb","account_type":"current","amount":100000,"bank_name":"growww"},{"account_no":"ccc","account_type":"savings","amount":50000,"bank_name":"Share Khan"},{"account_no":"aaa","account_type":"savings","amount":191358.5994,"bank_name":"Zerodha"}];
+    public cashComponents: PortfolioCash[] = [];
 
-    public stockComponents: PortfolioStocks[] = [{"account_no":"bbb","amount_invested":10425,"exchange":"NASDAQ","full_name":"NVIDIA Corp","market_cap":"large","quantity":100,"ticker":"NVDA"},{"account_no":"bbb","amount_invested":40000,"exchange":"NASDAQ","full_name":"Microsoft Corp","market_cap":"large","quantity":100,"ticker":"MSFT"},{"account_no":"bbb","amount_invested":2505,"exchange":"NASDAQ","full_name":"Teradata Corp","market_cap":"large","quantity":100,"ticker":"TDC"},{"account_no":"aaa","amount_invested":6700,"exchange":"NYSE","full_name":"Walmart Inc","market_cap":"large","quantity":100,"ticker":"WMT"},{"account_no":"aaa","amount_invested":12974.4006,"exchange":"NASDAQ","full_name":"Apple Inc","market_cap":"large","quantity":60,"ticker":"AAPL"},{"account_no":"aaa","amount_invested":16367,"exchange":"NYSE","full_name":"Alphabet Inc.","market_cap":"large","quantity":100,"ticker":"googl"}];
+    public stockComponents: PortfolioStocks[] = [];
 
     public mfComponents: PortfolioMutualFunds[] = [];
 
@@ -53,7 +53,7 @@ export class AssetComponent {
     }
 
     getFunds(): Observable<any> {
-        return this.http.get('https://portfoliomanager-a2hs.onrender.com/mutual_funds/portfolio/all').pipe(catchError(this.errorHandler));
+        return this.http.get(this.app.domain + 'mutual_funds/portfolio/all').pipe(catchError(this.errorHandler));
     }
 
     getStocks(): Observable<any> {
@@ -78,20 +78,20 @@ export class AssetComponent {
 
 
     ngOnInit(): void {
-        // this.getCash().subscribe(data => {
-        //     console.log(JSON.stringify(data));
-        //     this.cashComponents = data;
-        // });
+        this.getCash().subscribe(data => {
+            console.log(JSON.stringify(data));
+            this.cashComponents = data;
+        });
 
-        // this.getStocks().subscribe(data => {
-        //     console.log(JSON.stringify(data));
-        //     this.stockComponents = data;
-        // });
+        this.getStocks().subscribe(data => {
+            console.log(JSON.stringify(data));
+            this.stockComponents = data;
+        });
 
-        // this.getFunds().subscribe(data => {
-        //     console.log(JSON.stringify(data));
-        //     this.mfComponents = data;
-        // });
+        this.getFunds().subscribe(data => {
+            console.log(JSON.stringify(data));
+            this.mfComponents = data;
+        });
     }
 
     sellStocks(i: number, stockCount: string): void {

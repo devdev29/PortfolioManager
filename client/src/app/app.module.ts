@@ -13,6 +13,11 @@ import { AssetComponent } from './asset/asset.component';
 import { HeaderComponent } from './header/header.component';
 import { AddAssetComponent } from './add-asset/add-asset.component';
 import { TransactionComponent } from './transaction/transaction.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -31,9 +36,13 @@ import { TransactionComponent } from './transaction/transaction.component';
     AppRoutingModule,
     FontAwesomeModule,
     MatButtonToggleModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatFormFieldModule, 
+    MatNativeDateModule
   ],
-  providers: [],
+  providers: [DatePipe], 
   bootstrap: [AppComponent]
 })
 export class AppModule { }

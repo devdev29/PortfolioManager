@@ -1,6 +1,5 @@
 .asset-container {
     padding: 0rem;
-    padding-right: 1rem;
     margin-top: 0;
 }
 
@@ -12,7 +11,7 @@ app-header {
 
 .asset-grp {
     margin: 1rem;
-    margin-right: 0;
+    margin-right: 1rem;
     background-color: #ffffff22;
     border-radius: 0.3rem;
 }
@@ -20,7 +19,7 @@ app-header {
 .asset-grp h1 {
     border-bottom: 0.3rem solid #dda15e;
     padding: 2rem;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     color: #dda15e;
     margin: 0;
     font-family: 'Montserrat';

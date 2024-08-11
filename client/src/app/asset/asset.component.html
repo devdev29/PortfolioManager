@@ -2,7 +2,7 @@
     <div class="asset-container">
         <app-header></app-header>
         <div class="asset-grp asset-cash">
-            <h1><fa-icon style="margin-right: 1rem;" [icon]="faWallet"></fa-icon>CASH</h1>
+            <h1><fa-icon style="margin-right: 1rem;" [icon]="faWallet"></fa-icon>ACCOUNTS</h1>
             <div class="asset-cash-list" *ngFor="let comp of cashComponents">
                 <p class="asset-cash-list-head">
                     <span>{{comp.bank_name}}</span>
@@ -56,11 +56,11 @@
                     <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">Invested Amount: </p>
                     <p><b>{{comp.amount_invested | number : '1.2-2'}}</b></p>
                 </div>
-                <div class="asset-mf-list-foot">
+                <!-- <div class="asset-mf-list-foot">
                     <input #stockInput type="number" min="1" placeholder="Enter the number of stocks you want to buy or sell" required>
                     <button id="buy" (click)="buyStocks(i, stockInput.value)">BUY</button>
                     <button id="sell" (click)="sellStocks(i, stockInput.value)">SELL</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

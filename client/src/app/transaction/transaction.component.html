@@ -1,5 +1,40 @@
 <section>
     <div class="transaction-container">
         <app-header></app-header>
+        <div class="transaction-cont">
+            <div class="transaction-head">
+                <span class="transaction-head-left">ACCOUNT HISTORY</span>
+                <span class="transaction-head-right">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Choose a date</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </span>
+            </div>
+            <div class="transaction-btm">
+                <table class="transaction-table">
+                    <tr class="transaction-table-head">
+                        <th>Product ID</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Account No</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr *ngFor="let row of transactionList" class="transaction-table-rows">
+                        <td>{{ row.ticker }}</td>
+                        <!-- <td>{{ row.quantity}}</td> -->
+                        <td *ngIf="row.quantity < 0">{{ row.quantity }}</td>
+                        <td *ngIf="row.quantity >= 0">+{{ row.quantity }}</td>
+                        <td>{{ row.price | number : '1.2-2' }}$</td>
+                        <td>{{ row.account_no }}</td>
+                        <!-- <td>{{ row.amount | number }}</td> -->
+                        <td style="color: rgb(200, 0, 0)" *ngIf="row.amount < 0">{{ row.amount | number : '1.2-2' }}$</td>
+                        <td style="color: rgb(0, 160, 0)" *ngIf="row.amount >= 0">+{{ row.amount | number : '1.2-2' }}$</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
