@@ -15,7 +15,7 @@ value = Blueprint('value', __name__)
 def get_today_value():
     try:
         today = date.today()
-        value_today = ValueRepo.get_value(today, dynamic=True)
+        value_today = ValueRepo.get_value(today, dynamic=False)
         return jsonify(value_today), 200
     except InsufficientAPICredits as e:
         return jsonify({'message':str(e)}), 403
