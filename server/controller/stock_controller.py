@@ -159,17 +159,19 @@ def get_stock_performance():
     try:
         performance={'gainers':[], 'losers':[]}
         all_stocks = StockRepo.get_all_stocks()
+        tickers = ''
         for stock in all_stocks:
             ticker = stock['ticker']
-            stock_quote = requests.get(
-                f'https://api.twelvedata.com/quote?symbol={ticker}&apikey={os.environ["TWELVE_API_KEY"]}'
-            ).json()
+            tickers += f'{ticker}'
+        stock_quotes = requests.get(
+            f'https://api.twelvedata.com/quote?symbol={tickers}&apikey={os.environ["TWELVE_API_KEY"]}'
+        ).json()
+        for stock_quote in stock_quotes:
             float_percent = float(stock_quote['percent_change'])
             if float_percent > 0:
                 performance['gainers'].append({ticker: float_percent})
             else:
-                performance['losers'].append({ticker: float_percent})
-            
+                performance['losers'].append({ticker: float_percent})    
         performance['gainers'] = sorted(performance['gainers'], key = lambda gainer: float(list(gainer.values())[0]))
         performance['losers'] = sorted(performance['losers'], key = lambda loser: float(list(loser.values())[0]), reverse=True)
         return performance, 200
