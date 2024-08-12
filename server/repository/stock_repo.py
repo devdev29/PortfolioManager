@@ -54,7 +54,7 @@ class StockRepo:
         stocks = StockRepo.get_all_stocks()
         tickers = ''
         for stock in stocks:
-            tickers += f'{stock['ticker']},'
+            tickers += f'{stock["ticker"]},'
         price_res = requests.get(
         f'https://financialmodelingprep.com/api/v3/quote-short/{tickers}?apikey={os.environ["FMP_API_KEY"]}'
         ).json()
