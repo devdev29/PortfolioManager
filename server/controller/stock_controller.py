@@ -162,12 +162,13 @@ def get_stock_performance():
         tickers = ''
         for stock in all_stocks:
             ticker = stock['ticker']
-            tickers += f'{ticker}'
+            tickers += f'{ticker},'
         stock_quotes = requests.get(
-            f'https://api.twelvedata.com/quote?symbol={tickers}&apikey={os.environ["TWELVE_API_KEY"]}'
+            f'https://financialmodelingprep.com/api/v3/stock-price-change/{tickers}?apikey={os.environ["FMP_API_KEY"]}'
         ).json()
         for stock_quote in stock_quotes:
-            float_percent = float(stock_quote['percent_change'])
+            ticker = stock_quote['symbol']
+            float_percent = float(stock_quote['1D'])
             if float_percent > 0:
                 performance['gainers'].append({ticker: float_percent})
             else:
