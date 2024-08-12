@@ -52,8 +52,18 @@ class StockRepo:
     def get_total_returns():
         total_returns = 0
         stocks = StockRepo.get_all_stocks()
+        tickers = ''
         for stock in stocks:
-            total_returns += StockRepo.get_stock_returns(stock['ticker'])
+            tickers += f'{stock['ticker']},'
+        price_res = requests.get(
+        f'https://financialmodelingprep.com/api/v3/quote-short/{tickers}?apikey={os.environ["FMP_API_KEY"]}'
+        ).json()
+        for price in price_res:
+            ticker = price['symbol']
+            stock = StockRepo.get_stock_by_ticker(ticker)
+            curr_price = float(price['price'])*int(stock['quantity'])
+            stock_return = curr_price-float(stock['amount_invested'])
+            total_returns+=stock_return
         return total_returns
 
     @staticmethod
